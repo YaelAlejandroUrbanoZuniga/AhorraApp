@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
+import { Dimensions } from 'react-native'; 
 
 const screenWidth = Dimensions.get('window').width;
 
-export default function HomeScreen() {
+export default function PrincipalScreen() {
   const ingresos = 8000;
   const egresos = 1760;
 
