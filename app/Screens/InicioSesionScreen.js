@@ -12,18 +12,29 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function LoginScreen({ onNavigateToRegister }) {
+export default function InicioSesionScreen({ onNavigateToRegister }) {
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        if (email.trim() === '' || password.trim() === '') {
-            Alert.alert('Error', 'Por favor ingresa tu correo y contraseña.');
-            return;
-        }
-        Alert.alert('¡Éxito!', 'Has iniciado sesión correctamente.');
-    };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email.trim() === '') {
+        Alert.alert('Error', 'Por favor ingresa tu correo.');
+        return;
+    } else if (!emailRegex.test(email)) {
+        Alert.alert('Error', 'Por favor ingresa un correo válido.');
+        return;
+    } else if (password.trim() === '') {
+        Alert.alert('Error', 'Por favor ingresa tu contraseña.');
+        return;
+    } else {
+        Alert.alert('¡Éxito!', `Bienvenido ${email.split('@')[0]}`);
+        setEmail('');
+        setPassword('');
+    }
+};
 
     return (
         <SafeAreaView style={styles.safeArea}>

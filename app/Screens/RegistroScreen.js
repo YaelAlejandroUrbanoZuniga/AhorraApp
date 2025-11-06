@@ -5,7 +5,7 @@ import { View, Text,StyleSheet, TextInput, Pressable,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function RegisterScreen({ onNavigateToLogin }) {
+export default function RegistroScreen({ onNavigateToLogin }) {
 
     const [nombreCompleto, setNombreCompleto] = useState('');
     const [email, setEmail] = useState('');

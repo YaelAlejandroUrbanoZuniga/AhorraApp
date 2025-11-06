@@ -9,6 +9,10 @@ export default function TransaccionesScreen({ navigation }) {
     { id: '3', fecha: '2025-11-03', categoria: 'Transporte', descripcion: 'Gasolina', monto: -120, tipo: 'gasto' },
     { id: '4', fecha: '2025-11-03', categoria: 'Entretenimiento', descripcion: 'Cine', monto: -80, tipo: 'gasto' },
   ]);
+const handleAccion = (accion) => 
+  {
+    Alert.alert('Acción realizada', `Se ${accion} una transacción.`);
+  };
 
   return (
     <View style={styles.container}>
@@ -20,12 +24,28 @@ export default function TransaccionesScreen({ navigation }) {
       </View>
 
       
-      <TouchableOpacity
-        style={styles.newTransactionButton}
-        onPress={() => navigation.navigate('NuevaTransaccion')}
-      >
-        <Text style={styles.newTransactionText}>NUEVA TRANSACCIÓN</Text>
-      </TouchableOpacity>
+    <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: '#00b140' }]}
+          onPress={() => handleAccion('creó')}
+        >
+        <Text style={styles.buttonText}>NUEVA</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: '#f39c12' }]}
+          onPress={() => handleAccion('actualizó')}
+        >
+        <Text style={styles.buttonText}>ACTUALIZAR</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: '#e74c3c' }]}
+          onPress={() => handleAccion('eliminó')}
+        >
+        <Text style={styles.buttonText}>ELIMINAR</Text>
+        </TouchableOpacity>
+      </View>
 
       
       <FlatList
@@ -76,6 +96,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20,
+    paddingHorizontal: 10,
+  },
+
+  actionButton: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  
   newTransactionButton: {
     backgroundColor: '#00b140',
     margin: 20,

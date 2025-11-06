@@ -1,38 +1,68 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function AjustesScreen() {
+  const user = {
+    name: 'Usuario',
+    email: 'usuario@example.com',
+    monthlyIncome: 12000,
+  };
+
+  const handleLogout = () => {
+    Alert.alert('Cerrar sesión', '¿Seguro que quieres salir?', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Sí, salir', onPress: () => console.log('Sesión cerrada') },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
-      {/* Encabezado */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>👤 🔔</Text>
+        <Ionicons name="person-circle-outline" size={40} color="#fff" />
+        <Text style={styles.headerTitle}>AJUSTES</Text>
+        <Ionicons name="notifications-outline" size={28} color="#fff" />
       </View>
 
-      {/* Título */}
-      <Text style={styles.title}>AJUSTES</Text>
+      <View style={styles.profileCard}>
+        <View style={styles.profileRow}>
+          <View style={styles.avatar}>
+            <Ionicons name="person-outline" size={35} color="#2e7d32" />
+          </View>
+          <View>
+            <Text style={styles.userName}>{user.name}</Text>
+            <Text style={styles.userEmail}>{user.email}</Text>
+          </View>
+        </View>
+        <View style={styles.incomeContainer}>
+          <Text style={styles.incomeLabel}>Ingreso mensual</Text>
+          <Text style={styles.incomeValue}>${user.monthlyIncome.toFixed(2)}</Text>
+        </View>
+      </View>
 
-      {/* Botones principales */}
-      <View style={styles.buttonGroup}>
-        <TouchableOpacity style={styles.greenButton}>
-          <Text style={styles.buttonText}>CUENTA</Text>
+      <View style={styles.optionsContainer}>
+        <TouchableOpacity style={styles.optionButton}>
+          <Text style={styles.optionText}>Ayuda</Text>
+          <Ionicons name="chevron-forward-outline" size={20} color="#555" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.greenButton}>
-          <Text style={styles.buttonText}>ACCESIBILIDAD</Text>
+
+        <TouchableOpacity style={styles.optionButton}>
+          <Text style={styles.optionText}>Idioma</Text>
+          <Ionicons name="chevron-forward-outline" size={20} color="#555" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.greenButton}>
-          <Text style={styles.buttonText}>AYUDA</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.redButton}>
-          <Text style={styles.buttonText}>SALIR</Text>
+
+        <TouchableOpacity style={styles.optionButton}>
+          <Text style={styles.optionText}>Modo oscuro</Text>
+          <Ionicons name="moon-outline" size={20} color="#555" />
         </TouchableOpacity>
       </View>
 
-      {/* Barra de navegación inferior */}
-      <View style={styles.navBar}>
-        <Button title="MOVIMIENTOS" color="#ff0080" onPress={() => {}} />
-        <Button title="INICIO" color="#ff0080" onPress={() => {}} />
-        <Button title="AJUSTES" color="#ff0080" onPress={() => {}} />
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutText}>CERRAR SESIÓN</Text>
+      </TouchableOpacity>
+
+      <View style={styles.footer}>
+        <Text style={styles.footerApp}>AHORRA + APP</Text>
+        <Text style={styles.footerVersion}>Versión 1.0.0</Text>
       </View>
     </View>
   );
@@ -41,56 +71,106 @@ export default function AjustesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e6ffe6',
+    backgroundColor: '#f1fdf1',
     padding: 20,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
   },
   header: {
-    width: '100%',
-    alignItems: 'flex-end',
-    marginBottom: 10,
+    backgroundColor: '#2e7d32',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  headerText: {
-    fontSize: 24,
-  },
-  title: {
-    fontSize: 28,
+  headerTitle: {
+    color: '#fff',
     fontWeight: 'bold',
+    fontSize: 20,
+  },
+  profileCard: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  profileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    backgroundColor: '#e8f5e9',
+    borderRadius: 50,
+    padding: 10,
+    marginRight: 15,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2e7d32',
+  },
+  userEmail: {
+    fontSize: 14,
+    color: '#555',
+  },
+  incomeContainer: {
+    marginTop: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 10,
+  },
+  incomeLabel: {
+    color: '#777',
+    fontSize: 13,
+  },
+  incomeValue: {
+    color: '#2e7d32',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  optionsContainer: {
+    marginTop: 25,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    overflow: 'hidden',
+  },
+  optionButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  optionText: {
+    fontSize: 16,
     color: '#333',
-    marginBottom: 30,
   },
-  buttonGroup: {
-    width: '100%',
+  logoutButton: {
+    backgroundColor: '#ff5252',
+    marginTop: 30,
+    paddingVertical: 15,
+    borderRadius: 15,
     alignItems: 'center',
   },
-  greenButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-    marginVertical: 8,
-    width: '80%',
-    alignItems: 'center',
-  },
-  redButton: {
-    backgroundColor: '#f44336',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-    marginVertical: 8,
-    width: '80%',
-    alignItems: 'center',
-  },
-  buttonText: {
+  logoutText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 40,
-    width: '100%',
+  footer: {
+    alignItems: 'center',
+    marginTop: 25,
+  },
+  footerApp: {
+    color: '#666',
+    fontSize: 13,
+  },
+  footerVersion: {
+    color: '#aaa',
+    fontSize: 12,
   },
 });
