@@ -1,7 +1,10 @@
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions} from 'react-native';
+import React from 'react';
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const FOOTER_HEIGHT = 72;
 
 export default function PrincipalScreen() {
   const totalIncome = 8000.0;
@@ -9,9 +12,9 @@ export default function PrincipalScreen() {
   const balance = totalIncome - totalExpenses;
   const unreadCount = 2;
   const budgets = [
-    { id: '1', category: 'Alimentación', spent: 450, limit: 500 },
-    { id: '2', category: 'Transporte', spent: 120, limit: 300 },
-    { id: '3', category: 'Entretenimiento', spent: 80, limit: 200 },
+    { id: '1', category: 'ALIMENTACIÓN', spent: 450, limit: 500 },
+    { id: '2', category: 'TRANSPORTE', spent: 120, limit: 300 },
+    { id: '3', category: 'ENTRETENIMIENTO', spent: 80, limit: 200 },
   ];
 
   const budgetAlerts = budgets.filter(b => b.spent / b.limit >= 0.8);
@@ -21,15 +24,15 @@ export default function PrincipalScreen() {
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.avatarCircle}>
-            <FontAwesome name="user" size={18} color="#0e620dff" />
+            <Ionicons name="person" size={18} color="#0e620dff" />
           </View>
           <View style={styles.headerGreeting}>
-            <Text style={styles.greetingSmall}>¡Hola, Usuario!</Text>
+            <Text style={styles.greetingSmall}>¡HOLA, USUARIO!</Text>
           </View>
         </View>
 
         <TouchableOpacity style={styles.bellButton} activeOpacity={0.8}>
-          <FontAwesome name="bell" size={18} color="#fff" />
+          <Ionicons name="notifications" size={18} color="#fff" />
           {unreadCount > 0 && (
             <View style={styles.unreadBadge}>
               <Text style={styles.unreadText}>{unreadCount}</Text>
@@ -38,7 +41,7 @@ export default function PrincipalScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.contenedorPrincipal}>
+      <ScrollView contentContainerStyle={[styles.contenedorPrincipal, { paddingBottom: FOOTER_HEIGHT + 28 }]}>
         <View style={styles.balanceWrap}>
           <View style={styles.balanceCircle}>
             <Text style={styles.balanceLabel}>BALANCE TOTAL</Text>
@@ -53,63 +56,63 @@ export default function PrincipalScreen() {
         <View style={styles.quickActions}>
           <TouchableOpacity style={styles.actionCard} activeOpacity={0.8}>
             <View style={styles.actionIconWrap}>
-              <FontAwesome name="wallet" size={20} color="#0e620dff" />
+              <Ionicons name="wallet" size={20} color="#0e620dff" />
             </View>
-            <Text style={styles.actionText}>Presupuestos</Text>
+            <Text style={styles.actionText}>PRESUPUESTOS</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionCard} activeOpacity={0.8}>
             <View style={styles.actionIconWrap}>
               <FontAwesome name="pie-chart" size={20} color="#0e620dff" />
             </View>
-            <Text style={styles.actionText}>Gráficas</Text>
+            <Text style={styles.actionText}>GRÁFICAS</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.statsRow}>
           <View style={[styles.statCard, styles.statIncome]}>
-            <Text style={styles.statLabel}>Ingresos</Text>
+            <Text style={styles.statLabel}>INGRESOS</Text>
             <Text style={styles.statValue}>${totalIncome.toFixed(2)}</Text>
           </View>
 
           <View style={[styles.statCard, styles.statExpense]}>
-            <Text style={styles.statLabel}>Gastos</Text>
+            <Text style={styles.statLabel}>GASTOS</Text>
             <Text style={styles.statValue}>${totalExpenses.toFixed(2)}</Text>
           </View>
         </View>
 
         {budgetAlerts.length > 0 && (
           <View style={styles.alertBox}>
-            <Text style={styles.alertTitle}>⚠️ Alertas de Presupuesto</Text>
+            <Text style={styles.alertTitle}>⚠️ ALERTAS DE PRESUPUESTO</Text>
             {budgetAlerts.map(b => {
               const percent = (b.spent / b.limit) * 100;
               return (
                 <View key={b.id} style={styles.alertRow}>
                   <Text style={styles.alertText}>{b.category}</Text>
-                  <Text style={styles.alertPercent}>{percent.toFixed(0)}% usado</Text>
+                  <Text style={styles.alertPercent}>{percent.toFixed(0)}% USADO</Text>
                 </View>
               );
             })}
           </View>
         )}
 
-        <View style={{ height: 40 }} />
       </ScrollView>
 
-      <View style={styles.piePagina}>
+      {/* FOOTER fijo abajo */}
+      <View style={[styles.piePagina, { height: FOOTER_HEIGHT }]}>
         <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
           <FontAwesome name="list-ul" size={20} color="#999" />
           <Text style={styles.textoPiePagina}>TRANSACCIONES</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <FontAwesome name="home" size={20} color="#999" />
-          <Text style={styles.textoPiePagina}>INICIO</Text>
+          <FontAwesome name="home" size={20} color="#0e620dff" />
+          <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>INICIO</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <FontAwesome name="cog" size={20} color="#0e620dff" />
-          <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>AJUSTES</Text>
+          <FontAwesome name="cog" size={20} color="#999" />
+          <Text style={styles.textoPiePagina}>AJUSTES</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -124,9 +127,9 @@ const styles = StyleSheet.create({
 
   header: {
     backgroundColor: '#0e620dff',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingHorizontal: 18,
+    paddingTop: 14,
+    paddingBottom: 14,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -136,13 +139,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatarCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: 12,
   },
   headerGreeting: {
     justifyContent: 'center',
@@ -150,47 +153,50 @@ const styles = StyleSheet.create({
   greetingSmall: {
     color: '#fff',
     fontSize: 14,
+    fontWeight: '600',
+    textTransform: 'uppercase',
   },
 
   bellButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: '#0b4f10',
     alignItems: 'center',
     justifyContent: 'center',
   },
   unreadBadge: {
     position: 'absolute',
-    top: -6,
-    right: -6,
+    top: -5,
+    right: -5,
     backgroundColor: '#ff3b30',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     alignItems: 'center',
     justifyContent: 'center',
   },
   unreadText: {
     color: '#fff',
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: 'bold',
   },
 
   contenedorPrincipal: {
-    padding: 16,
-    paddingBottom: 12,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 18,
   },
 
   balanceWrap: {
     alignItems: 'center',
-    marginTop: -28, // eleva el círculo por encima del header
-    marginBottom: 12,
+    marginTop: -30,
+    marginBottom: 18,
   },
   balanceCircle: {
-    width: SCREEN_WIDTH * 0.7,
-    height: SCREEN_WIDTH * 0.7,
-    borderRadius: (SCREEN_WIDTH * 0.7) / 2,
+    width: SCREEN_WIDTH * 0.72,
+    height: SCREEN_WIDTH * 0.72,
+    borderRadius: (SCREEN_WIDTH * 0.72) / 2,
     backgroundColor: '#4CAF50',
     alignItems: 'center',
     justifyContent: 'center',
@@ -199,12 +205,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 12,
     elevation: 6,
-    padding: 12,
+    padding: 14,
   },
   balanceLabel: {
     color: '#eaf7ef',
     fontSize: 12,
     marginBottom: 6,
+    textTransform: 'uppercase',
+    fontWeight: '600',
   },
   balanceAmount: {
     color: '#fff',
@@ -215,13 +223,14 @@ const styles = StyleSheet.create({
   banner: {
     backgroundColor: '#f1f5f7',
     borderRadius: 16,
-    padding: 12,
-    marginVertical: 10,
+    padding: 14,
+    marginVertical: 12,
     alignItems: 'center',
   },
   bannerText: {
     color: '#666',
     fontSize: 13,
+    textTransform: 'uppercase',
   },
 
   quickActions: {
@@ -233,22 +242,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
     marginHorizontal: 6,
-    borderRadius: 16,
-    paddingVertical: 18,
+    borderRadius: 18,
+    paddingVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#f0f0f0',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
-    shadowRadius: 6,
+    shadowRadius: 5,
     elevation: 2,
   },
   actionIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+    width: 46,
+    height: 46,
+    borderRadius: 14,
     backgroundColor: '#ecf9ef',
     alignItems: 'center',
     justifyContent: 'center',
@@ -257,32 +264,33 @@ const styles = StyleSheet.create({
   actionText: {
     color: '#333',
     fontSize: 14,
+    fontWeight: '500',
+    textTransform: 'uppercase',
   },
 
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 14,
+    marginTop: 16,
   },
   statCard: {
     flex: 1,
     borderRadius: 14,
-    padding: 12,
+    padding: 14,
     marginHorizontal: 6,
     alignItems: 'center',
   },
   statIncome: {
     backgroundColor: '#E8F7EC',
-    borderColor: '#DFF2DE',
   },
   statExpense: {
     backgroundColor: '#FFF5F5',
-    borderColor: '#F6DEDE',
   },
   statLabel: {
     fontSize: 12,
     marginBottom: 6,
     color: '#4b4b4b',
+    textTransform: 'uppercase',
   },
   statValue: {
     fontSize: 20,
@@ -293,8 +301,8 @@ const styles = StyleSheet.create({
   alertBox: {
     backgroundColor: '#FFF7ED',
     borderRadius: 12,
-    padding: 12,
-    marginTop: 16,
+    padding: 14,
+    marginTop: 18,
     borderWidth: 1,
     borderColor: '#FFE8C7',
   },
@@ -302,6 +310,7 @@ const styles = StyleSheet.create({
     color: '#B46309',
     fontWeight: '700',
     marginBottom: 8,
+    textTransform: 'uppercase',
   },
   alertRow: {
     flexDirection: 'row',
@@ -310,32 +319,40 @@ const styles = StyleSheet.create({
   },
   alertText: {
     color: '#4b4b4b',
+    textTransform: 'uppercase',
   },
   alertPercent: {
     color: '#B46309',
     fontWeight: '700',
+    textTransform: 'uppercase',
   },
 
   piePagina: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: FOOTER_HEIGHT,
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: '#ddd',
     backgroundColor: '#fff',
-    paddingVertical: 10,
-    paddingBottom: 20,
+    paddingHorizontal: 12,
   },
   itemPiePagina: {
     alignItems: 'center',
-    padding: 5,
   },
   textoPiePagina: {
     fontSize: 12,
     color: '#666',
     marginTop: 4,
+    textTransform: 'uppercase',
+    fontWeight: '600',
   },
   textoPiePaginaActivo: {
     color: '#0e620dff',
-    fontWeight: 'bold',
+    fontWeight: '800',
   },
 });

@@ -1,204 +1,172 @@
-import { Text, StyleSheet, View, SafeAreaView, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'
+import React from 'react';
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const TarjetaNotificacion = ({ iconoNombre, titulo, mensaje, fecha, colorBorde, isAlert }) => (
-    <View style={[styles.tarjeta, { borderLeftColor: colorBorde }]}>
-        <View style={styles.encabezadoTarjeta}>
-            <View style={[styles.contenedorIcono, { backgroundColor: colorBorde }]}>
-                <FontAwesome name={iconoNombre} size={18} color={isAlert ? '#333' : '#fff'} />
-            </View>
-            <View style={styles.indicadorEstado} />
+const FOOTER_HEIGHT = 72;
+
+export default function NotificacionesScreen() {
+  return (
+    <SafeAreaView style={styles.areaSegura}>
+
+      {/* HEADER — idéntico al de Presupuestos */}
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <View style={styles.avatarCircle}>
+            <Ionicons name="person" size={18} color="#0e620dff" />
+          </View>
+          <View style={styles.headerGreeting}>
+            <Text style={styles.greetingSmall}>NOTIFICACIONES</Text>
+          </View>
         </View>
-        <Text style={styles.tituloTarjeta}>{titulo}</Text>
-        <Text style={styles.mensajeTarjeta}>{mensaje}</Text>
-        <Text style={styles.fechaTarjeta}>{fecha}</Text>
-    </View>
-);
 
-export default function NotificacionesScreen() 
-{
-    return (
-        <SafeAreaView style={styles.areaSegura}>
-            <View style={styles.encabezado}>
-                <TouchableOpacity style={styles.botonEncabezado}>
-                    <FontAwesome name="user-circle-o" size={24} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.tituloEncabezado}>NOTIFICACIONES</Text>
-                <TouchableOpacity style={styles.botonEncabezado}>
-                    <FontAwesome name="bell-o" size={24} color="#fff" />
-                </TouchableOpacity>
-            </View>
+        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8}>
+          <Ionicons name="notifications" size={18} color="#fff" />
+        </TouchableOpacity>
+      </View>
 
-            <View style={styles.contenedorNotificaciones}>
-                <TarjetaNotificacion
-                    iconoNombre="exclamation-triangle"
-                    titulo="Presupuesto casi alcanzado"
-                    mensaje="Has gastado el 90% de tu presupuesto de Alimentación"
-                    fecha="2025-11-04"
-                    colorBorde="#FFC107"
-                    isAlert={true}
-                />
+      {/* CONTENIDO */}
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 15, color: '#444' }}>
+          Aquí aparecerán tus notificaciones.
+        </Text>
+      </View>
 
-                <TarjetaNotificacion
-                    iconoNombre="info-circle"
-                    titulo="Pago programado"
-                    mensaje="Tienes un pago de servicios pendiente para el 15 de noviembre"
-                    fecha="2025-11-04"
-                    colorBorde="#2196F3"
-                    isAlert={false}
-                />
+      {/* FOOTER — idéntico al de Presupuestos, con INICIO activo */}
+      <View style={[styles.piePagina, { height: FOOTER_HEIGHT }]}>
+        
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="list" size={20} color="#999" />
+          <Text style={styles.textoPiePagina}>TRANSACCIONES</Text>
+        </TouchableOpacity>
 
-                <TarjetaNotificacion
-                    iconoNombre="check-circle"
-                    titulo="Meta alcanzada"
-                    mensaje="Has cumplido tu meta de ahorro del mes pasado"
-                    fecha="2025-11-01"
-                    colorBorde="#4CAF50"
-                    isAlert={false}
-                />
-            </View>
-            
-            <View style={styles.piePagina}>
-                <TouchableOpacity style={styles.itemPiePagina}>
-                    <FontAwesome name="list-ul" size={20} color="#999" />
-                    <Text style={styles.textoPiePagina}>TRANSACCIONES</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itemPiePagina}>
-                    <FontAwesome name="home" size={20} color="#0e620dff" />
-                    <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>INICIO</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itemPiePagina}>
-                    <FontAwesome name="cog" size={20} color="#999" />
-                    <Text style={styles.textoPiePagina}>AJUSTES</Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
-    );
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="home" size={20} color="#0e620dff" />
+          <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>INICIO</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="settings" size={20} color="#999" />
+          <Text style={styles.textoPiePagina}>AJUSTES</Text>
+        </TouchableOpacity>
+
+      </View>
+
+    </SafeAreaView>
+  );
 }
 
-const styles = StyleSheet.create(
-{
-    areaSegura: 
-    {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-    },
+const styles = StyleSheet.create({
+  areaSegura: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
 
-    encabezado: 
-    {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#0e620dff',
-        paddingHorizontal: 15,
-        height: 60,
-        paddingTop: 10,
-    },
-    
-    botonEncabezado: 
-    {
-        padding: 5,
-    },
+  /* HEADER */
+  header: {
+    backgroundColor: '#0e620dff',
+    paddingHorizontal: 18,
+    paddingTop: 14,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerLeft: { flexDirection: 'row', alignItems: 'center' },
+  avatarCircle: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  headerGreeting: { justifyContent: 'center' },
+  greetingSmall: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+  bellButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#0b4f10',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
-    tituloEncabezado: 
-    {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#fff',
-    },
+  /* CARD PRESUPUESTO */
+  budgetCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 16,
+    elevation: 3,
+  },
+  category: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0e620dff',
+    marginBottom: 8,
+    textTransform: 'uppercase',
+  },
+  cardRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  amount: { fontWeight: '600', color: '#333' },
+  used: { fontWeight: '600', color: '#f39c12' },
+  remaining: { fontWeight: '600', color: '#0b6623' },
+  percentage: { fontWeight: '700', color: '#777' },
 
-    contenedorNotificaciones: 
-    {
-        flex: 1,
-        padding: 10,
-    },
+  /* BOTONES */
+  buttonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginBottom: FOOTER_HEIGHT + 12,
+    textAlign: 'center',
+  },
+  actionButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    fontSize: 12,
+  },
 
-    tarjeta: 
-    {
-        backgroundColor: '#fff',
-        padding: 15,
-        borderRadius: 8,
-        marginBottom: 10,
-        borderLeftWidth: 5, 
-        elevation: 1, 
-        shadowColor: '#000', 
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 1,
-    },
-
-    encabezadoTarjeta: 
-    {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 5,
-    },
-
-    contenedorIcono: 
-    {
-        width: 30,
-        height: 30,
-        borderRadius: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    indicadorEstado: 
-    {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#4CAF50',
-        alignSelf: 'flex-start',
-    },
-    
-    tituloTarjeta: 
-    {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 2,
-    },
-
-    mensajeTarjeta: 
-    {
-        fontSize: 14,
-        color: '#666',
-        marginBottom: 5,
-    },
-
-    fechaTarjeta: 
-    {
-        fontSize: 12,
-        color: '#999',
-        textAlign: 'right',
-    },
-
-    piePagina: 
-    {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        borderTopWidth: 1,
-        borderTopColor: '#ddd',
-        backgroundColor: '#fff',
-        paddingVertical: 8,
-    },
-
-    itemPiePagina: 
-    {
-        alignItems: 'center',
-        padding: 5,
-    },
-
-    textoPiePagina: 
-    {
-        fontSize: 12,
-        color: '#666',
-    },
-
-    textoPiePaginaActivo:
-    {
-        color: '#0e620dff', 
-        fontWeight: 'bold',
-    }
+  /* FOOTER */
+  piePagina: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    backgroundColor: '#fff',
+  },
+  itemPiePagina: { alignItems: 'center' },
+  textoPiePagina: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+    textTransform: 'uppercase',
+    fontWeight: '600',
+  },
+  textoPiePaginaActivo: {
+    color: '#0e620dff',
+    fontWeight: '800',
+  },
 });

@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Button } from 'react-native';
+import { Text, StyleSheet, View, Button, SafeAreaView } from 'react-native';
 import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 
@@ -41,7 +41,7 @@ export default function MenuInterfacesScreen()
         case 'Menu':
             default:
                 return(
-                    <View style={styles.Principal}>
+                    <SafeAreaView style={styles.Principal}>
                         <Text style={styles.Descripcion}>UNIVERSIDAD POLITÉCNICA DE QUERÉTARO</Text>
                         <Text style={styles.Menu}>MENÚ DE INTERFACES</Text>
 
@@ -66,7 +66,7 @@ export default function MenuInterfacesScreen()
                         <Text style={styles.Descripcion3}>Estrada Carranza America Montserrath</Text>
                         <Text style={styles.Descripcion3}>Hernandez Gutierrez Alexis</Text>
                         <Text style={styles.Descripcion3}>Urbano Zuñiga Yael Alejandro</Text>
-                    </View>
+                    </SafeAreaView>
                 )        
     }
 }

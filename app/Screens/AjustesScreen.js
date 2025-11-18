@@ -1,101 +1,163 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
+const FOOTER_HEIGHT = 72;
 
 export default function AjustesScreen() {
   const user = {
-    name: 'Usuario',
-    email: 'usuario@example.com',
+    name: 'USUARIO',
+    email: 'USUARIO@EXAMPLE.COM',
     monthlyIncome: 12000,
   };
 
   const handleLogout = () => {
-    Alert.alert('Cerrar sesión', '¿Seguro que quieres salir?', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Sí, salir', onPress: () => console.log('Sesión cerrada') },
+    Alert.alert('CERRAR SESIÓN', '¿SEGURO QUE QUIERES SALIR?', [
+      { text: 'CANCELAR', style: 'cancel' },
+      { text: 'SÍ, SALIR', onPress: () => console.log('SESION CERRADA') },
     ]);
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.areaSegura}>
+      {/* HEADER: misma estructura que Principal */}
       <View style={styles.header}>
-        <Ionicons name="person-circle-outline" size={40} color="#fff" />
-        <Text style={styles.headerTitle}>AJUSTES</Text>
-        <Ionicons name="notifications-outline" size={28} color="#fff" />
-      </View>
-
-      <View style={styles.profileCard}>
-        <View style={styles.profileRow}>
-          <View style={styles.avatar}>
-            <Ionicons name="person-outline" size={35} color="#2e7d32" />
+        <View style={styles.headerLeft}>
+          <View style={styles.avatarCircle}>
+            <Ionicons name="person" size={18} color="#0e620dff" />
           </View>
-          <View>
-            <Text style={styles.userName}>{user.name}</Text>
-            <Text style={styles.userEmail}>{user.email}</Text>
+          <View style={styles.headerGreeting}>
+            <Text style={styles.greetingSmall}>USUARIO</Text>
           </View>
         </View>
-        <View style={styles.incomeContainer}>
-          <Text style={styles.incomeLabel}>Ingreso mensual</Text>
-          <Text style={styles.incomeValue}>${user.monthlyIncome.toFixed(2)}</Text>
+
+        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8}>
+          <Ionicons name="notifications" size={18} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView contentContainerStyle={[styles.contenedorPrincipal, { paddingBottom: FOOTER_HEIGHT + 28 }]}>
+        <View style={styles.profileCard}>
+          <View style={styles.profileRow}>
+            <View style={styles.avatar}>
+              <Ionicons name="person-outline" size={35} color="#0e620dff" />
+            </View>
+            <View>
+              <Text style={styles.userName}>{user.name}</Text>
+              <Text style={styles.userEmail}>{user.email}</Text>
+            </View>
+          </View>
+
+          <View style={styles.incomeContainer}>
+            <Text style={styles.incomeLabel}>INGRESO MENSUAL</Text>
+            <Text style={styles.incomeValue}>${user.monthlyIncome.toFixed(2)}</Text>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.optionsContainer}>
-        <TouchableOpacity style={styles.optionButton}>
-          <Text style={styles.optionText}>Ayuda</Text>
-          <Ionicons name="chevron-forward-outline" size={20} color="#555" />
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity style={styles.optionButton} activeOpacity={0.8}>
+            <Text style={styles.optionText}>AYUDA</Text>
+            <Ionicons name="chevron-forward-outline" size={20} color="#555" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.optionButton} activeOpacity={0.8}>
+            <Text style={styles.optionText}>IDIOMA</Text>
+            <Ionicons name="chevron-forward-outline" size={20} color="#555" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.optionButton} activeOpacity={0.8}>
+            <Text style={styles.optionText}>MODO OSCURO</Text>
+            <Ionicons name="moon-outline" size={20} color="#555" />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.9}>
+          <Text style={styles.logoutText}>CERRAR SESIÓN</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      {/* FOOTER fijo abajo - mismo que Principal pero 'AJUSTES' activo */}
+      <View style={[styles.piePagina, { height: FOOTER_HEIGHT }]}>
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="list" size={20} color="#999" />
+          <Text style={styles.textoPiePagina}>TRANSACCIONES</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.optionButton}>
-          <Text style={styles.optionText}>Idioma</Text>
-          <Ionicons name="chevron-forward-outline" size={20} color="#555" />
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="home" size={20} color="#999" />
+          <Text style={styles.textoPiePagina}>INICIO</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.optionButton}>
-          <Text style={styles.optionText}>Modo oscuro</Text>
-          <Ionicons name="moon-outline" size={20} color="#555" />
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="settings" size={20} color="#0e620dff" />
+          <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>AJUSTES</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>CERRAR SESIÓN</Text>
-      </TouchableOpacity>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerApp}>AHORRA + APP</Text>
-        <Text style={styles.footerVersion}>Versión 1.0.0</Text>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  areaSegura: {
     flex: 1,
-    backgroundColor: '#f1fdf1',
-    padding: 20,
+    backgroundColor: '#f5f5f5',
   },
+
   header: {
-    backgroundColor: '#2e7d32',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 15,
+    backgroundColor: '#0e620dff',
+    paddingHorizontal: 18,
+    paddingTop: 14,
+    paddingBottom: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
-  headerTitle: {
+  avatarCircle: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  headerGreeting: {
+    justifyContent: 'center',
+  },
+  greetingSmall: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
+    fontWeight: '700',
+    textTransform: 'uppercase',
   },
+
+  bellButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#0b4f10',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  contenedorPrincipal: {
+    paddingHorizontal: 18,
+    paddingTop: 18,
+  },
+
   profileCard: {
     backgroundColor: '#fff',
-    borderRadius: 15,
-    padding: 20,
-    marginTop: 20,
+    borderRadius: 14,
+    padding: 16,
+    marginTop: 16,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
     elevation: 3,
   },
   profileRow: {
@@ -103,74 +165,102 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatar: {
-    backgroundColor: '#e8f5e9',
+    backgroundColor: '#ecf9ef',
     borderRadius: 50,
     padding: 10,
-    marginRight: 15,
+    marginRight: 14,
   },
   userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2e7d32',
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0e620dff',
+    textTransform: 'uppercase',
   },
   userEmail: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: 13,
+    color: '#777',
+    textTransform: 'uppercase',
   },
+
   incomeContainer: {
-    marginTop: 15,
+    marginTop: 14,
     borderTopWidth: 1,
     borderTopColor: '#eee',
-    paddingTop: 10,
+    paddingTop: 12,
   },
   incomeLabel: {
     color: '#777',
-    fontSize: 13,
+    fontSize: 12,
+    textTransform: 'uppercase',
   },
   incomeValue: {
-    color: '#2e7d32',
-    fontWeight: 'bold',
+    color: '#0e620dff',
+    fontWeight: '700',
     fontSize: 16,
+    textTransform: 'uppercase',
+    marginTop: 6,
   },
+
   optionsContainer: {
-    marginTop: 25,
+    marginTop: 18,
     backgroundColor: '#fff',
-    borderRadius: 15,
+    borderRadius: 12,
     overflow: 'hidden',
   },
   optionButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 18,
+    padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#f2f2f2',
   },
   optionText: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#333',
+    textTransform: 'uppercase',
+    fontWeight: '600',
   },
+
   logoutButton: {
     backgroundColor: '#ff5252',
-    marginTop: 30,
-    paddingVertical: 15,
-    borderRadius: 15,
+    marginTop: 18,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
   },
   logoutText: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontWeight: '700',
+    fontSize: 15,
+    textTransform: 'uppercase',
   },
-  footer: {
+
+  piePagina: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: FOOTER_HEIGHT,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 25,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
   },
-  footerApp: {
-    color: '#666',
-    fontSize: 13,
+  itemPiePagina: {
+    alignItems: 'center',
   },
-  footerVersion: {
-    color: '#aaa',
+  textoPiePagina: {
     fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+    textTransform: 'uppercase',
+    fontWeight: '600',
+  },
+  textoPiePaginaActivo: {
+    color: '#0e620dff',
+    fontWeight: '800',
   },
 });

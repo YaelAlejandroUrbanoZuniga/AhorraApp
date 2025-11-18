@@ -1,37 +1,38 @@
 import React, { useState } from 'react';
-import { View, Text,StyleSheet, TextInput, Pressable, 
-        Alert,KeyboardAvoidingView,Platform,ScrollView,
-        SafeAreaView
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text,StyleSheet, TextInput, Pressable, Alert,KeyboardAvoidingView,Platform,ScrollView,SafeAreaView,Image} from 'react-native';
 
 export default function RegistroScreen({ onNavigateToLogin }) {
 
     const [nombreCompleto, setNombreCompleto] = useState('');
     const [email, setEmail] = useState('');
-    const [ingreso, setIngreso] = useState('');
+    const [edad, setEdad] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleRegistro = () => {
-        if (nombreCompleto.trim() === '' || email.trim() === '' || ingreso.trim() === '' || password.trim() === '' || confirmPassword.trim() === '') {
-            Alert.alert('Error', 'Por favor completa todos los campos.');
+        if (
+            nombreCompleto.trim() === '' ||
+            email.trim() === '' ||
+            edad.trim() === '' ||
+            password.trim() === '' ||
+            confirmPassword.trim() === ''
+        ) {
+            Alert.alert('ERROR', 'POR FAVOR COMPLETA TODOS LOS CAMPOS.');
             return;
         }
         if (password !== confirmPassword) {
-            Alert.alert('Error', 'Las contraseñas no coinciden.');
+            Alert.alert('ERROR', 'LAS CONTRASEÑAS NO COINCIDEN.');
             return;
         }
-        if (isNaN(Number(ingreso)) || Number(ingreso) <= 0) {
-            Alert.alert('Error', 'Por favor ingresa un monto de ingreso válido.');
+        if (isNaN(Number(edad)) || Number(edad) <= 0) {
+            Alert.alert('ERROR', 'POR FAVOR INGRESA UNA EDAD VÁLIDA.');
             return;
         }
 
         Alert.alert(
-            'Registro exitoso', 
-            `Nombre: ${nombreCompleto}\nEmail: ${email}`
+            'REGISTRO EXITOSO', 
+            `NOMBRE: ${nombreCompleto}\nEMAIL: ${email}`
         );
-        
         onNavigateToLogin();
     };
 
@@ -46,58 +47,65 @@ export default function RegistroScreen({ onNavigateToLogin }) {
                     keyboardShouldPersistTaps="handled"
                 >
                     <View style={styles.logoContainer}>
-                        <Ionicons name="leaf" size={48} color="white" />
+                        <Image 
+                            source={require('../assets/ahorramasapp.png')} 
+                            style={styles.logoImage}
+                        />
                     </View>
 
                     <Text style={styles.title}>CREAR CUENTA</Text>
 
                     <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Nombre Completo</Text>
+                        <Text style={styles.label}>NOMBRE COMPLETO</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Nombre completo"
+                            placeholder="NOMBRE COMPLETO"
                             placeholderTextColor="#AAA"
                             value={nombreCompleto}
                             onChangeText={setNombreCompleto}
                             autoCapitalize="words"
                         />
-                        <Text style={styles.label}>Correo</Text>
+
+                        <Text style={styles.label}>CORREO</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Correo electrónico"
+                            placeholder="CORREO ELECTRÓNICO"
                             placeholderTextColor="#AAA"
                             value={email}
                             onChangeText={setEmail}
                             keyboardType="email-address"
                             autoCapitalize="none"
                         />
-                        <Text style={styles.label}>Ingreso Mensual</Text>
+
+                        <Text style={styles.label}>EDAD</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="0.00"
+                            placeholder="EDAD"
                             placeholderTextColor="#AAA"
-                            value={ingreso}
-                            onChangeText={setIngreso}
+                            value={edad}
+                            onChangeText={setEdad}
                             keyboardType="numeric"
                         />
-                        <Text style={styles.label}>Contraseña</Text>
+
+                        <Text style={styles.label}>CONTRASEÑA</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Contraseña"
+                            placeholder="CONTRASEÑA"
                             placeholderTextColor="#AAA"
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry={true}
                         />
-                        <Text style={styles.label}>Confirmar Contraseña</Text>
+
+                        <Text style={styles.label}>CONFIRMAR CONTRASEÑA</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Confirmar contraseña"
+                            placeholder="CONFIRMAR CONTRASEÑA"
                             placeholderTextColor="#AAA"
                             value={confirmPassword}
                             onChangeText={setConfirmPassword}
                             secureTextEntry={true}
-						/>
+                        />
                     </View>
 
                     <Pressable style={styles.button} onPress={handleRegistro}>
@@ -105,8 +113,9 @@ export default function RegistroScreen({ onNavigateToLogin }) {
                     </Pressable>
 
                     <Pressable style={styles.footer} onPress={onNavigateToLogin}>
-                        <Text style={styles.linkText}>← Volver a Iniciar Sesión</Text>
+                        <Text style={styles.linkText}>← VOLVER A INICIAR SESIÓN</Text>
                     </Pressable>
+
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
@@ -125,21 +134,24 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
     },
+
     logoContainer: {
-        width: 90,
-        height: 90,
-        borderRadius: 45,
-        backgroundColor: '#00C853',
-        justifyContent: 'center',
-        alignItems: 'center',
         marginBottom: 15,
+        alignItems: 'center',
     },
+    logoImage: {
+        width: 120,
+        height: 120,
+        resizeMode: 'contain',
+    },
+
     title: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#333',
         marginBottom: 30,
     },
+
     inputContainer: {
         width: '100%',
     },
@@ -159,8 +171,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
     },
+
     button: {
-        backgroundColor: '#00C853',
+        backgroundColor: '#0e620dff',
         paddingVertical: 15,
         borderRadius: 8,
         width: '100%',
@@ -172,12 +185,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+
     footer: {
         marginTop: 25,
     },
     linkText: {
         fontSize: 14,
-        color: '#00C853',
+        color: '#0e620dff',
         fontWeight: 'bold',
     },
 });

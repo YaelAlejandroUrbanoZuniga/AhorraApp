@@ -1,69 +1,59 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function TransaccionesScreen({ navigation }) {
-  const [transacciones, setTransacciones] = useState([
+const FOOTER_HEIGHT = 72;
+
+export default function TransaccionesScreen() {
+  const [transacciones] = useState([
     { id: '1', fecha: '2025-11-01', categoria: 'Salario', descripcion: 'Pago mensual', monto: 3000, tipo: 'ingreso' },
     { id: '2', fecha: '2025-11-02', categoria: 'Alimentación', descripcion: 'Supermercado', monto: -450, tipo: 'gasto' },
     { id: '3', fecha: '2025-11-03', categoria: 'Transporte', descripcion: 'Gasolina', monto: -120, tipo: 'gasto' },
     { id: '4', fecha: '2025-11-03', categoria: 'Entretenimiento', descripcion: 'Cine', monto: -80, tipo: 'gasto' },
   ]);
-const handleAccion = (accion) => 
-  {
+
+  const handleAccion = (accion) => {
     Alert.alert('Acción realizada', `Se ${accion} una transacción.`);
   };
 
   return (
-    <View style={styles.container}>
-      
+    <SafeAreaView style={styles.areaSegura}>
+
       <View style={styles.header}>
-        <Ionicons name="person-outline" size={28} color="white" />
-        <Text style={styles.headerTitle}>TRANSACCIONES</Text>
-        <Ionicons name="notifications-outline" size={28} color="white" />
-      </View>
+        <View style={styles.headerLeft}>
+          <View style={styles.avatarCircle}>
+            <Ionicons name="person" size={18} color="#0e620dff" />
+          </View>
+          <View style={styles.headerGreeting}>
+            <Text style={styles.greetingSmall}>TRANSACCIONES</Text>
+          </View>
+        </View>
 
-      
-    <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: '#00b140' }]}
-          onPress={() => handleAccion('creó')}
-        >
-        <Text style={styles.buttonText}>NUEVA</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: '#f39c12' }]}
-          onPress={() => handleAccion('actualizó')}
-        >
-        <Text style={styles.buttonText}>ACTUALIZAR</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: '#e74c3c' }]}
-          onPress={() => handleAccion('eliminó')}
-        >
-        <Text style={styles.buttonText}>ELIMINAR</Text>
+        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8}>
+          <Ionicons name="notifications" size={18} color="#fff" />
         </TouchableOpacity>
       </View>
 
-      
       <FlatList
         data={transacciones}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: FOOTER_HEIGHT + 120 }}
         renderItem={({ item }) => (
           <View style={styles.transactionCard}>
             <Text style={styles.date}>{item.fecha}</Text>
+
             <View style={styles.cardContent}>
               <Ionicons
                 name={item.tipo === 'ingreso' ? 'arrow-down-circle' : 'arrow-up-circle'}
                 size={30}
                 color={item.tipo === 'ingreso' ? 'green' : 'red'}
               />
+
               <View style={{ flex: 1, marginLeft: 10 }}>
                 <Text style={styles.category}>{item.categoria}</Text>
                 <Text style={styles.description}>{item.descripcion}</Text>
               </View>
+
               <Text
                 style={[
                   styles.amount,
@@ -76,58 +66,102 @@ const handleAccion = (accion) =>
           </View>
         )}
       />
-    </View>
+
+      <View style={styles.buttonsRow}>
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: '#00b140' }]}
+          onPress={() => handleAccion('creó')}
+        >
+          <Text style={styles.buttonText}>NUEVA TRANSACCIÓN</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: '#f39c12' }]}
+          onPress={() => handleAccion('actualizó')}
+        >
+          <Text style={styles.buttonText}>ACTUALIZAR TRANSACCIÓN</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: '#e74c3c' }]}
+          onPress={() => handleAccion('eliminó')}
+        >
+          <Text style={styles.buttonText}>ELIMINAR TRANSACCIÓN</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={[styles.piePagina, { height: FOOTER_HEIGHT }]}>
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="list" size={20} color="#0e620dff" />
+          <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>TRANSACCIONES</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="home" size={20} color="#999" />
+          <Text style={styles.textoPiePagina}>INICIO</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
+          <Ionicons name="settings" size={20} color="#999" />
+          <Text style={styles.textoPiePagina}>AJUSTES</Text>
+        </TouchableOpacity>
+      </View>
+
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  areaSegura: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+
   header: {
+    backgroundColor: '#0e620dff',
+    paddingHorizontal: 18,
+    paddingTop: 14,
+    paddingBottom: 14,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#006400',
-    padding: 20,
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
   },
-  headerTitle: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  buttonsContainer: {
+  headerLeft: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 20,
-    paddingHorizontal: 10,
+    alignItems: 'center',
+  },
+  avatarCircle: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  headerGreeting: { justifyContent: 'center' },
+  greetingSmall: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    textTransform: 'uppercase',
   },
 
-  actionButton: {
-    flex: 1,
-    marginHorizontal: 5,
-    paddingVertical: 12,
-    borderRadius: 8,
+  bellButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#0b4f10',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  
-  newTransactionButton: {
-    backgroundColor: '#00b140',
-    margin: 20,
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  newTransactionText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
+
   transactionCard: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#fff',
     marginHorizontal: 20,
-    marginBottom: 10,
+    marginTop: 12,
     borderRadius: 10,
-    padding: 10,
+    padding: 12,
     elevation: 3,
   },
   date: { fontSize: 12, color: '#666' },
@@ -135,4 +169,51 @@ const styles = StyleSheet.create({
   category: { fontWeight: 'bold' },
   description: { color: '#666' },
   amount: { fontWeight: 'bold', fontSize: 16 },
+
+  /* BOTONES */
+  buttonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginBottom: FOOTER_HEIGHT + 12,
+  },
+  actionButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+
+  piePagina: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    backgroundColor: '#fff',
+  },
+  itemPiePagina: { alignItems: 'center' },
+  textoPiePagina: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+    textTransform: 'uppercase',
+    fontWeight: '600',
+  },
+  textoPiePaginaActivo: {
+    color: '#0e620dff',
+    fontWeight: '800',
+  },
 });

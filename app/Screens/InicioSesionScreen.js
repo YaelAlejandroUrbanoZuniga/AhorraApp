@@ -1,16 +1,5 @@
 import React, { useState } from 'react';
-import { 
-    View, 
-    Text, 
-    StyleSheet, 
-    TextInput, 
-    Pressable, 
-    KeyboardAvoidingView,
-    Platform,
-    Alert,
-    SafeAreaView
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView,Platform,Alert,SafeAreaView, Image } from 'react-native';
 
 export default function InicioSesionScreen({ onNavigateToRegister }) {
     
@@ -18,23 +7,23 @@ export default function InicioSesionScreen({ onNavigateToRegister }) {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (email.trim() === '') {
-        Alert.alert('Error', 'Por favor ingresa tu correo.');
-        return;
-    } else if (!emailRegex.test(email)) {
-        Alert.alert('Error', 'Por favor ingresa un correo válido.');
-        return;
-    } else if (password.trim() === '') {
-        Alert.alert('Error', 'Por favor ingresa tu contraseña.');
-        return;
-    } else {
-        Alert.alert('¡Éxito!', `Bienvenido ${email.split('@')[0]}`);
-        setEmail('');
-        setPassword('');
-    }
-};
+        if (email.trim() === '') {
+            Alert.alert('Error', 'Por favor ingresa tu correo.');
+            return;
+        } else if (!emailRegex.test(email)) {
+            Alert.alert('Error', 'Por favor ingresa un correo válido.');
+            return;
+        } else if (password.trim() === '') {
+            Alert.alert('Error', 'Por favor ingresa tu contraseña.');
+            return;
+        } else {
+            Alert.alert('¡Éxito!', `Bienvenido ${email.split('@')[0]}`);
+            setEmail('');
+            setPassword('');
+        }
+    };
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -43,44 +32,47 @@ export default function InicioSesionScreen({ onNavigateToRegister }) {
                 style={styles.container}
             >
                 <View style={styles.logoContainer}>
-                    <Ionicons name="leaf" size={48} color="white" />
+                    <Image source={require('../assets/ahorramasapp.png')} style={styles.logoImage} />
                 </View>
 
                 <Text style={styles.title}>AHORRA + APP</Text>
 
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Usuario/Correo</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ingresa tu correo"
-                        placeholderTextColor="#AAA"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                    />
+                <View style={styles.card}>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>CORREO</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ingresa tu correo"
+                            placeholderTextColor="#AAA"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                        />
 
-                    <Text style={styles.label}>Contraseña</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ingresa tu contraseña"
-                        placeholderTextColor="#AAA"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry={true}
-                    />
-                </View>
+                        <Text style={styles.label}>CONTRASEÑA</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ingresa tu contraseña"
+                            placeholderTextColor="#AAA"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry={true}
+                        />
+                    </View>
 
-                <Pressable style={styles.button} onPress={handleLogin}>
-                    <Text style={styles.buttonText}>ACCEDER</Text>
-                </Pressable>
-
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>¿No tienes una cuenta? </Text>
-                    <Pressable onPress={onNavigateToRegister}>
-                        <Text style={styles.linkText}>REGÍSTRATE</Text>
+                    <Pressable style={styles.button} onPress={handleLogin}>
+                        <Text style={styles.buttonText}>ACCEDER</Text>
                     </Pressable>
                 </View>
+
+                <View style={styles.footer}>
+                    <Text style={styles.footerText}>¿NO TIENES CUENTA? </Text>
+                    <Pressable onPress={onNavigateToRegister}>
+                        <Text style={styles.linkText}> REGÍSTRATE</Text>
+                    </Pressable>
+                </View>
+
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
@@ -89,30 +81,46 @@ export default function InicioSesionScreen({ onNavigateToRegister }) {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#f5f5f5',
     },
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: 20,
-    },
-    logoContainer: {
-        width: 90,
-        height: 90,
-        borderRadius: 45,
-        backgroundColor: '#00C853', 
         justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 15,
     },
+
+    logoContainer: {
+    marginBottom: 60,
+    alignItems: 'center',
+    },
+
+    logoImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    },
+
     title: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 30,
+        color: '#0e620dff',
+        marginBottom: 25,
     },
+
+    card: {
+        width: '100%',
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1 },
+        marginBottom: 25,
+    },
+
     inputContainer: {
         width: '100%',
     },
@@ -120,42 +128,44 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#333',
         marginBottom: 8,
-        fontWeight: '500',
+        fontWeight: '600',
     },
     input: {
-        backgroundColor: '#F7F7F7',
-        borderColor: '#E0E0E0',
+        backgroundColor: '#fafafa',
+        borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 8,
-        padding: 15,
-        marginBottom: 20,
-        fontSize: 16,
+        padding: 14,
+        marginBottom: 18,
+        fontSize: 15,
         color: '#333',
     },
+
     button: {
-        backgroundColor: '#00C853',
-        paddingVertical: 15,
+        backgroundColor: '#0e620dff',
+        paddingVertical: 14,
         borderRadius: 8,
         width: '100%',
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 5,
     },
     buttonText: {
         color: '#FFFFFF',
         fontSize: 16,
         fontWeight: 'bold',
     },
+
     footer: {
         flexDirection: 'row',
-        marginTop: 25,
+        marginTop: 15,
     },
     footerText: {
         fontSize: 14,
-        color: '#888',
+        color: '#777',
     },
     linkText: {
         fontSize: 14,
-        color: '#00C853',
+        color: '#0e620dff',
         fontWeight: 'bold',
     },
 });
