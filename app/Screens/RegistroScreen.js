@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text,StyleSheet, TextInput, Pressable, Alert,KeyboardAvoidingView,Platform,ScrollView,SafeAreaView,Image} from 'react-native';
+import { View, Text,StyleSheet, TextInput, Pressable, Alert, KeyboardAvoidingView , Platform, ScrollView, SafeAreaView, Image} from 'react-native';
 
-export default function RegistroScreen({ onNavigateToLogin }) {
-
+export default function RegistroScreen({ navigation }) 
+{
     const [nombreCompleto, setNombreCompleto] = useState('');
     const [email, setEmail] = useState('');
     const [edad, setEdad] = useState('');
@@ -33,7 +33,7 @@ export default function RegistroScreen({ onNavigateToLogin }) {
             'REGISTRO EXITOSO', 
             `NOMBRE: ${nombreCompleto}\nEMAIL: ${email}`
         );
-        onNavigateToLogin();
+        navigation.navigate("Login");
     };
 
     return (
@@ -112,10 +112,9 @@ export default function RegistroScreen({ onNavigateToLogin }) {
                         <Text style={styles.buttonText}>CREAR CUENTA</Text>
                     </Pressable>
 
-                    <Pressable style={styles.footer} onPress={onNavigateToLogin}>
+                    <Pressable style={styles.footer} onPress={() => navigation.navigate("Login")}>
                         <Text style={styles.linkText}>← VOLVER A INICIAR SESIÓN</Text>
                     </Pressable>
-
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>

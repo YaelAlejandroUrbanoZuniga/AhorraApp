@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const FOOTER_HEIGHT = 72;
 
-export default function PrincipalScreen() {
+export default function PrincipalScreen({ navigation }) 
+{
   const totalIncome = 8000.0;
   const totalExpenses = 1760.0;
   const balance = totalIncome - totalExpenses;
@@ -54,14 +55,15 @@ export default function PrincipalScreen() {
         </View>
 
         <View style={styles.quickActions}>
-          <TouchableOpacity style={styles.actionCard} activeOpacity={0.8}>
+
+          <TouchableOpacity style={styles.actionCard} activeOpacity={0.8} onPress={() => navigation.navigate("Presupuestos")}>
             <View style={styles.actionIconWrap}>
               <Ionicons name="wallet" size={20} color="#0e620dff" />
             </View>
             <Text style={styles.actionText}>PRESUPUESTOS</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionCard} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.actionCard} activeOpacity={0.8} onPress={() => navigation.navigate("Graficas")}>
             <View style={styles.actionIconWrap}>
               <FontAwesome name="pie-chart" size={20} color="#0e620dff" />
             </View>

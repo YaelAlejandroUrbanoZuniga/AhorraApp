@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView,Platform,Alert,SafeAreaView, Image } from 'react-native';
 
-export default function InicioSesionScreen({ onNavigateToRegister }) {
-    
+export default function InicioSesionScreen({ navigation }) 
+{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -20,8 +20,7 @@ export default function InicioSesionScreen({ onNavigateToRegister }) {
             return;
         } else {
             Alert.alert('¡Éxito!', `Bienvenido ${email.split('@')[0]}`);
-            setEmail('');
-            setPassword('');
+            navigation.navigate("Principal"); 
         }
     };
 
@@ -68,15 +67,15 @@ export default function InicioSesionScreen({ onNavigateToRegister }) {
 
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>¿NO TIENES CUENTA? </Text>
-                    <Pressable onPress={onNavigateToRegister}>
+
+                    <Pressable onPress={() => navigation.navigate("Registro")}>
                         <Text style={styles.linkText}> REGÍSTRATE</Text>
                     </Pressable>
                 </View>
-
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
-};
+}
 
 const styles = StyleSheet.create({
     safeArea: {
