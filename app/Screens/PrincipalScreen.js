@@ -29,12 +29,6 @@ export default function PrincipalScreen() {
           <View style={styles.headerGreeting}>
             <Text style={styles.greetingSmall}>¡HOLA, USUARIO!</Text>
           </View>
-          <Pressable
-            style={styles.button}
-            onPress={() => navigation.navigate ('InicioSesiónScreen')}
-            >
-              <Text style={styles.buttonText}>Inicio de Sesión</Text>
-            </Pressable>
         </View>
 
         <TouchableOpacity style={styles.bellButton} activeOpacity={0.8}>
@@ -360,16 +354,5 @@ const styles = StyleSheet.create({
   textoPiePaginaActivo: {
     color: '#0e620dff',
     fontWeight: '800',
-  },
-   button: {
-    backgroundColor: '#0e620dff', // Azul estándar
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
