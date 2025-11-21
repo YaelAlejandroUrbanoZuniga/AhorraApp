@@ -99,24 +99,6 @@ export default function PrincipalScreen({ navigation })
         )}
 
       </ScrollView>
-
-      {/* FOOTER fijo abajo */}
-      <View style={[styles.piePagina, { height: FOOTER_HEIGHT }]}>
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <FontAwesome name="list-ul" size={20} color="#999" />
-          <Text style={styles.textoPiePagina}>TRANSACCIONES</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <FontAwesome name="home" size={20} color="#0e620dff" />
-          <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>INICIO</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <FontAwesome name="cog" size={20} color="#999" />
-          <Text style={styles.textoPiePagina}>AJUSTES</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }

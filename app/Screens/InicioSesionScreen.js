@@ -20,7 +20,7 @@ export default function InicioSesionScreen({ navigation })
             return;
         } else {
             Alert.alert('¡Éxito!', `Bienvenido ${email.split('@')[0]}`);
-            navigation.navigate("Principal"); 
+            navigation.navigate("MenuPrincipal");
         }
     };
 
