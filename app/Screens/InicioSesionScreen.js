@@ -19,7 +19,6 @@ export default function InicioSesionScreen({ navigation })
             Alert.alert('Error', 'Por favor ingresa tu contraseña.');
             return;
         } else {
-            Alert.alert('¡Éxito!', `Bienvenido ${email.split('@')[0]}`);
             navigation.navigate("MenuPrincipal");
         }
     };

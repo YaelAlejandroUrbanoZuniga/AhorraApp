@@ -30,27 +30,6 @@ export default function NotificacionesScreen() {
           Aquí aparecerán tus notificaciones.
         </Text>
       </View>
-
-      {/* FOOTER — idéntico al de Presupuestos, con INICIO activo */}
-      <View style={[styles.piePagina, { height: FOOTER_HEIGHT }]}>
-        
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <Ionicons name="list" size={20} color="#999" />
-          <Text style={styles.textoPiePagina}>TRANSACCIONES</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <Ionicons name="home" size={20} color="#0e620dff" />
-          <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>INICIO</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <Ionicons name="settings" size={20} color="#999" />
-          <Text style={styles.textoPiePagina}>AJUSTES</Text>
-        </TouchableOpacity>
-
-      </View>
-
     </SafeAreaView>
   );
 }

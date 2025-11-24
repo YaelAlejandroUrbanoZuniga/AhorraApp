@@ -32,7 +32,7 @@ export default function PrincipalScreen({ navigation })
           </View>
         </View>
 
-        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8} onPress={() => navigation.navigate("Notificaciones")}>
           <Ionicons name="notifications" size={18} color="#fff" />
           {unreadCount > 0 && (
             <View style={styles.unreadBadge}>
@@ -97,7 +97,6 @@ export default function PrincipalScreen({ navigation })
             })}
           </View>
         )}
-
       </ScrollView>
     </SafeAreaView>
   );

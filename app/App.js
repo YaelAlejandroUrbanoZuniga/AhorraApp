@@ -14,6 +14,8 @@ import AjustesScreen from "./Screens/AjustesScreen";
 import PresupuestosScreen from "./Screens/PresupuestosScreen";
 import GraficasScreen from "./Screens/GraficasScreen";
 
+import NotificacionesScreen from "./Screens/NotificacionesScreen";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -49,8 +51,8 @@ function MenuPrincipalTabs()
         },
       })}
     >
-      <Tab.Screen name="Principal" component={PrincipalScreen} />
       <Tab.Screen name="Transacciones" component={TransaccionesScreen} />
+      <Tab.Screen name="Principal" component={PrincipalScreen} />
       <Tab.Screen name="Ajustes" component={AjustesScreen} />
     </Tab.Navigator>
   );
@@ -66,6 +68,7 @@ export default function App()
         <Stack.Screen name="MenuPrincipal" component={MenuPrincipalTabs} />
         <Stack.Screen name="Presupuestos" component={PresupuestosScreen} />
         <Stack.Screen name="Graficas" component={GraficasScreen} />
+        <Stack.Screen name="Notificaciones" component={NotificacionesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -20,7 +20,6 @@ export default function AjustesScreen() {
 
   return (
     <SafeAreaView style={styles.areaSegura}>
-      {/* HEADER: misma estructura que Principal */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.avatarCircle}>
@@ -31,7 +30,7 @@ export default function AjustesScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8} onPress={() => navigation.navigate("Notificaciones")}>
           <Ionicons name="notifications" size={18} color="#fff" />
         </TouchableOpacity>
       </View>
@@ -75,24 +74,6 @@ export default function AjustesScreen() {
           <Text style={styles.logoutText}>CERRAR SESIÓN</Text>
         </TouchableOpacity>
       </ScrollView>
-
-      {/* FOOTER fijo abajo - mismo que Principal pero 'AJUSTES' activo */}
-      <View style={[styles.piePagina, { height: FOOTER_HEIGHT }]}>
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <Ionicons name="list" size={20} color="#999" />
-          <Text style={styles.textoPiePagina}>TRANSACCIONES</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <Ionicons name="home" size={20} color="#999" />
-          <Text style={styles.textoPiePagina}>INICIO</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.itemPiePagina} activeOpacity={0.8}>
-          <Ionicons name="settings" size={20} color="#0e620dff" />
-          <Text style={[styles.textoPiePagina, styles.textoPiePaginaActivo]}>AJUSTES</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }
