@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView,Platform,Alert,SafeAreaView, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Alert, SafeAreaView, Image } from 'react-native';
+import ForgotPasswordModal from './ForgotPasswordModal';
 
-export default function InicioSesionScreen({ navigation }) 
-{
+const logoImage = require('../assets/ahorramasapp.png'); 
+
+export default function InicioSesionScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    
+    const [isModalVisible, setModalVisible] = useState(false);
 
     const handleLogin = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,7 +34,7 @@ export default function InicioSesionScreen({ navigation })
                 style={styles.container}
             >
                 <View style={styles.logoContainer}>
-                    <Image source={require('../assets/ahorramasapp.png')} style={styles.logoImage} />
+                    <Image source={logoImage} style={styles.logoImage} />
                 </View>
 
                 <Text style={styles.title}>AHORRA + APP</Text>
@@ -59,6 +63,12 @@ export default function InicioSesionScreen({ navigation })
                         />
                     </View>
 
+                    <Pressable onPress={() => setModalVisible(true)} style={{alignSelf: 'flex-end', marginBottom: 15}}>
+                        <Text style={{ color: '#0e620dff', fontSize: 14, fontWeight: '600' }}>
+                            ¿Olvidaste tu contraseña?
+                        </Text>
+                    </Pressable>
+
                     <Pressable style={styles.button} onPress={handleLogin}>
                         <Text style={styles.buttonText}>ACCEDER</Text>
                     </Pressable>
@@ -71,6 +81,12 @@ export default function InicioSesionScreen({ navigation })
                         <Text style={styles.linkText}> REGÍSTRATE</Text>
                     </Pressable>
                 </View>
+
+                <ForgotPasswordModal 
+                    isVisible={isModalVisible} 
+                    onClose={() => setModalVisible(false)} 
+                />
+
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
@@ -87,25 +103,21 @@ const styles = StyleSheet.create({
         padding: 20,
         justifyContent: 'center',
     },
-
     logoContainer: {
-    marginBottom: 60,
-    alignItems: 'center',
+        marginBottom: 30,
+        alignItems: 'center',
     },
-
     logoImage: {
-    width: 200,
-    height: 200,
-    resizeMode: 'contain',
+        width: 180,
+        height: 180,
+        resizeMode: 'contain',
     },
-
     title: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#0e620dff',
         marginBottom: 25,
     },
-
     card: {
         width: '100%',
         backgroundColor: '#fff',
@@ -118,7 +130,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         marginBottom: 25,
     },
-
     inputContainer: {
         width: '100%',
     },
@@ -138,7 +149,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#333',
     },
-
     button: {
         backgroundColor: '#0e620dff',
         paddingVertical: 14,
@@ -152,7 +162,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-
     footer: {
         flexDirection: 'row',
         marginTop: 15,
