@@ -1,19 +1,46 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Modal, TextInput, StyleSheet, Alert} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const FOOTER_HEIGHT = 72;
 
-export default function TransaccionesScreen() {
-  const [transacciones] = useState([
+export default function TransaccionesScreen({ navigation }) {
+  const [transacciones, setTransacciones] = useState([
     { id: '1', fecha: '2025-11-01', categoria: 'Salario', descripcion: 'Pago mensual', monto: 3000, tipo: 'ingreso' },
     { id: '2', fecha: '2025-11-02', categoria: 'Alimentación', descripcion: 'Supermercado', monto: -450, tipo: 'gasto' },
     { id: '3', fecha: '2025-11-03', categoria: 'Transporte', descripcion: 'Gasolina', monto: -120, tipo: 'gasto' },
     { id: '4', fecha: '2025-11-03', categoria: 'Entretenimiento', descripcion: 'Cine', monto: -80, tipo: 'gasto' },
   ]);
 
-  const handleAccion = (accion) => {
-    Alert.alert('Acción realizada', `Se ${accion} una transacción.`);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+
+  const abrirModal = (item) => {
+    setEditItem({ ...item });
+    setModalVisible(true);
+  };
+
+  const actualizarTransaccion = () => {
+    setTransacciones((prev) =>
+      prev.map((t) => (t.id === editItem.id ? editItem : t))
+    );
+    setModalVisible(false);
+  };
+
+   const eliminarTransaccion = (id) => {
+    Alert.alert(
+      'Eliminar',
+      '¿Seguro que quieres eliminar esta transacción?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: () =>
+            setTransacciones((prev) => prev.filter((t) => t.id !== id)),
+        },
+      ]
+    );
   };
 
   return (
@@ -24,14 +51,8 @@ export default function TransaccionesScreen() {
           <View style={styles.avatarCircle}>
             <Ionicons name="person" size={18} color="#0e620dff" />
           </View>
-          <View style={styles.headerGreeting}>
-            <Text style={styles.greetingSmall}>TRANSACCIONES</Text>
-          </View>
+          <Text style={styles.greetingSmall}>TRANSACCIONES</Text>
         </View>
-
-        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8} onPress={() => navigation.navigate("Notificaciones")}>
-          <Ionicons name="notifications" size={18} color="#fff" />
-        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -39,7 +60,11 @@ export default function TransaccionesScreen() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: FOOTER_HEIGHT + 120 }}
         renderItem={({ item }) => (
-          <View style={styles.transactionCard}>
+          <TouchableOpacity
+            onPress={() => abrirModal(item)}
+            onLongPress={() => eliminarTransaccion(item.id)}
+            style={styles.transactionCard}
+          >
             <Text style={styles.date}>{item.fecha}</Text>
 
             <View style={styles.cardContent}>
@@ -63,56 +88,90 @@ export default function TransaccionesScreen() {
                 {item.tipo === 'ingreso' ? '+' : '-'}${Math.abs(item.monto).toFixed(2)}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
+
 
       <View style={styles.buttonsRow}>
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: '#00b140' }]}
-          onPress={() => handleAccion('creó')}
+          onPress={() => navigation.navigate('NuevaTransaccion')}
         >
-          <Text style={styles.buttonText}>NUEVA TRANSACCIÓN</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: '#f39c12' }]}
-          onPress={() => handleAccion('actualizó')}
-        >
-          <Text style={styles.buttonText}>ACTUALIZAR TRANSACCIÓN</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: '#e74c3c' }]}
-          onPress={() => handleAccion('eliminó')}
-        >
-          <Text style={styles.buttonText}>ELIMINAR TRANSACCIÓN</Text>
+          <Text style={styles.buttonText}>NUEVA</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+
+            <Text style={styles.modalTitle}>Actualizar Transacción</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Categoría"
+              placeholderTextColor="#555"
+              value={editItem?.categoria}
+              onChangeText={(text) => setEditItem({ ...editItem, categoria: text })}
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Descripción"
+              placeholderTextColor="#555"
+              value={editItem?.descripcion}
+              onChangeText={(text) => setEditItem({ ...editItem, descripcion: text })}
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Monto"
+              placeholderTextColor="#555"
+              keyboardType="numeric"
+              value={String(editItem?.monto)}
+              onChangeText={(text) => setEditItem({ ...editItem, monto: Number(text) })}
+            />
+
+            <TouchableOpacity style={styles.saveButton} onPress={actualizarTransaccion}>
+              <Text style={styles.saveText}>Guardar Cambios</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.cancelText}>Cancelar</Text>
+            </TouchableOpacity>
+
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  areaSegura: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
 
+
+const styles = StyleSheet.create({
+  areaSegura: { 
+    flex: 1, 
+    backgroundColor: '#f5f5f5' 
+  },
   header: {
     backgroundColor: '#0e620dff',
     paddingHorizontal: 18,
-    paddingTop: 14,
-    paddingBottom: 14,
+    paddingVertical: 14,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  headerLeft: { 
+   flexDirection: 'row', 
+   alignItems: 'center' 
   },
-  avatarCircle: {
+   avatarCircle: {
     width: 46,
     height: 46,
     borderRadius: 23,
@@ -121,21 +180,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
   },
-  headerGreeting: { justifyContent: 'center' },
-  greetingSmall: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-  },
-
-  bellButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: '#0b4f10',
-    alignItems: 'center',
-    justifyContent: 'center',
+  greetingSmall: { 
+    color: '#fff', 
+    fontSize: 16, 
+    fontWeight: '700' 
   },
 
   transactionCard: {
@@ -146,56 +194,84 @@ const styles = StyleSheet.create({
     padding: 12,
     elevation: 3,
   },
-  date: { fontSize: 12, color: '#666' },
-  cardContent: { flexDirection: 'row', alignItems: 'center', marginTop: 5 },
-  category: { fontWeight: 'bold' },
-  description: { color: '#666' },
-  amount: { fontWeight: 'bold', fontSize: 16 },
-
-  /* BOTONES */
+  date: { 
+    fontSize: 12, 
+    color: '#666' 
+  },
+  cardContent: { 
+    flexDirection: 'row',
+    alignItems: 'center', 
+    marginTop: 5
+  },
+  category: { 
+    fontWeight: 'bold' 
+  },
+  description: { 
+    color: '#666' 
+  },
+  amount: { 
+    fontWeight: 'bold', 
+    fontSize: 16 
+  },
   buttonsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingHorizontal: 16,
     marginBottom: FOOTER_HEIGHT + 12,
   },
   actionButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
-    marginHorizontal: 5,
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    fontSize: 12,
-    textAlign: 'center',
+  buttonText: { 
+    color: '#fff', 
+    fontWeight: 'bold', 
+    fontSize: 14 
   },
-
-  piePagina: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  modalContent: {
     backgroundColor: '#fff',
+    borderRadius: 14,
+    padding: 20,
   },
-  itemPiePagina: { alignItems: 'center' },
-  textoPiePagina: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-    textTransform: 'uppercase',
-    fontWeight: '600',
+  modalTitle: { 
+    fontSize: 18, 
+    fontWeight: '700', 
+    marginBottom: 10 
   },
-  textoPiePaginaActivo: {
-    color: '#0e620dff',
-    fontWeight: '800',
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    color: '#000',
   },
+  saveButton: {
+    backgroundColor: '#00b140',
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  saveText: { 
+    color: '#fff', 
+    textAlign: 'center', 
+    fontWeight: 'bold' 
+  },
+  cancelButton: {
+    backgroundColor: '#ccc',
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  cancelText: { 
+    textAlign: 'center', 
+    fontWeight: '700' },
 });
