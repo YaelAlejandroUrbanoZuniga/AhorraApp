@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View,Text,StyleSheet,TextInput,} from 'react-native';
+import { View,Text,StyleSheet,TextInput, Button} from 'react-native';
 import Modal from 'react-native-modal';
 
 export default function OlvidarContraseña({ isVisible, onClose }) {
