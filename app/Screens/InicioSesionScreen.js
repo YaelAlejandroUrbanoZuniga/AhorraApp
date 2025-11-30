@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Alert, SafeAreaView, Image } from 'react-native';
-import ForgotPasswordModal from './ForgotPasswordModal';
+import OlvidarContraseña from './ForgotPasswordModal';
 
 const logoImage = require('../assets/ahorramasapp.png'); 
 
@@ -82,8 +82,8 @@ export default function InicioSesionScreen({ navigation }) {
                     </Pressable>
                 </View>
 
-                <ForgotPasswordModal 
-                    isVisible={isModalVisible} 
+                <OlvidarContraseña 
+                    visible={isModalVisible} 
                     onClose={() => setModalVisible(false)} 
                 />
 
