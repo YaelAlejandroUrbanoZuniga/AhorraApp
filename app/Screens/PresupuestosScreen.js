@@ -18,7 +18,7 @@ export default function PresupuestosScreen() {
   return (
     <SafeAreaView style={styles.areaSegura}>
 
-      {/* HEADER — igual que Ajustes/Transacciones */}
+      {/* HEADER — igual que Ajustes/Transacciones */} 
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.avatarCircle}>
@@ -28,10 +28,6 @@ export default function PresupuestosScreen() {
             <Text style={styles.greetingSmall}>PRESUPUESTOS</Text>
           </View>
         </View>
-
-        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8} onPress={() => navigation.navigate("Notificaciones")}>
-          <Ionicons name="notifications" size={18} color="#fff" />
-        </TouchableOpacity>
       </View>
 
       {/* LISTA DE PRESUPUESTOS */}

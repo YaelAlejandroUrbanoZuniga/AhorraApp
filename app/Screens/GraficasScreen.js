@@ -18,10 +18,6 @@ export default function GraficasScreen() {
             <Text style={styles.greetingSmall}>GRÁFICAS</Text>
           </View>
         </View>
-
-        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8} onPress={() => navigation.navigate("Notificaciones")}>
-          <Ionicons name="notifications" size={18} color="#fff" />
-        </TouchableOpacity>
       </View>
 
       {/* CONTENIDO */}

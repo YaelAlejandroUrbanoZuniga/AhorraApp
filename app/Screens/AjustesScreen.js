@@ -29,10 +29,6 @@ export default function AjustesScreen() {
             <Text style={styles.greetingSmall}>USUARIO</Text>
           </View>
         </View>
-
-        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8} onPress={() => navigation.navigate("Notificaciones")}>
-          <Ionicons name="notifications" size={18} color="#fff" />
-        </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={[styles.contenedorPrincipal, { paddingBottom: FOOTER_HEIGHT + 28 }]}>

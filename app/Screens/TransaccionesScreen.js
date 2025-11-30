@@ -28,10 +28,6 @@ export default function TransaccionesScreen() {
             <Text style={styles.greetingSmall}>TRANSACCIONES</Text>
           </View>
         </View>
-
-        <TouchableOpacity style={styles.bellButton} activeOpacity={0.8} onPress={() => navigation.navigate("Notificaciones")}>
-          <Ionicons name="notifications" size={18} color="#fff" />
-        </TouchableOpacity>
       </View>
 
       <FlatList

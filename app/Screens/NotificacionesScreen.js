@@ -4,16 +4,19 @@ import { Ionicons } from '@expo/vector-icons';
 
 const FOOTER_HEIGHT = 72;
 
-export default function NotificacionesScreen() {
+export default function NotificacionesScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.areaSegura}>
 
-      {/* HEADER — idéntico al de Presupuestos */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <View style={styles.avatarCircle}>
-            <Ionicons name="person" size={18} color="#0e620dff" />
-          </View>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="arrow-back" size={24} color="#fff" />
+          </TouchableOpacity>
           <View style={styles.headerGreeting}>
             <Text style={styles.greetingSmall}>NOTIFICACIONES</Text>
           </View>
@@ -24,7 +27,6 @@ export default function NotificacionesScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* CONTENIDO */}
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontSize: 15, color: '#444' }}>
           Aquí aparecerán tus notificaciones.
@@ -40,7 +42,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
 
-  /* HEADER */
   header: {
     backgroundColor: '#0e620dff',
     paddingHorizontal: 18,
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center' },
+
   avatarCircle: {
     width: 46,
     height: 46,
@@ -60,10 +62,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
   },
+  backButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+
   headerGreeting: { justifyContent: 'center' },
   greetingSmall: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
     textTransform: 'uppercase',
   },
@@ -76,7 +84,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  /* CARD PRESUPUESTO */
   budgetCard: {
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -101,7 +108,6 @@ const styles = StyleSheet.create({
   remaining: { fontWeight: '600', color: '#0b6623' },
   percentage: { fontWeight: '700', color: '#777' },
 
-  /* BOTONES */
   buttonsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -121,31 +127,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'uppercase',
     fontSize: 12,
-  },
-
-  /* FOOTER */
-  piePagina: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    backgroundColor: '#fff',
-  },
-  itemPiePagina: { alignItems: 'center' },
-  textoPiePagina: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-    textTransform: 'uppercase',
-    fontWeight: '600',
-  },
-  textoPiePaginaActivo: {
-    color: '#0e620dff',
-    fontWeight: '800',
   },
 });

@@ -19,55 +19,57 @@ import NotificacionesScreen from "./Screens/NotificacionesScreen";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function MenuPrincipalTabs() 
-{
+function MenuPrincipalTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => (
-      {
-        headerShown: false,
-        tabBarActiveTintColor: "#0e620dff",
-        tabBarInactiveTintColor: "gray",
-        tabBarStyle: { height: 60, paddingBottom: 8 },
-
-        tabBarIcon: ({ color, size }) => 
         {
-          let iconName;
+          headerShown: false,
+          tabBarActiveTintColor: "#0e620dff",
+          tabBarInactiveTintColor: "gray",
+          tabBarStyle: { height: 60, paddingBottom: 8 },
 
-          switch (route.name) 
-          {
-            case "Principal":
-              iconName = "home";
-              break;
-            case "Transacciones":
-              iconName = "swap-horizontal";
-              break;
-            case "Ajustes":
-              iconName = "settings";
-              break;
-          }
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
 
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}
+            switch (route.name) {
+              case "Principal":
+                iconName = "home";
+                break;
+              case "Transacciones":
+                iconName = "swap-horizontal";
+                break;
+              case "Presupuestos":
+                iconName = "wallet";
+                break;
+              case "Graficas":
+                iconName = "pie-chart";
+                break;
+              case "Ajustes":
+                iconName = "settings";
+                break;
+            }
+
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
     >
-      <Tab.Screen name="Transacciones" component={TransaccionesScreen} />
       <Tab.Screen name="Principal" component={PrincipalScreen} />
+      <Tab.Screen name="Transacciones" component={TransaccionesScreen} />
+      <Tab.Screen name="Presupuestos" component={PresupuestosScreen} />
+      <Tab.Screen name="Graficas" component={GraficasScreen} />
       <Tab.Screen name="Ajustes" component={AjustesScreen} />
     </Tab.Navigator>
   );
 }
 
-export default function App() 
-{
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={InicioSesionScreen} />
         <Stack.Screen name="Registro" component={RegistroScreen} />
         <Stack.Screen name="MenuPrincipal" component={MenuPrincipalTabs} />
-        <Stack.Screen name="Presupuestos" component={PresupuestosScreen} />
-        <Stack.Screen name="Graficas" component={GraficasScreen} />
         <Stack.Screen name="Notificaciones" component={NotificacionesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
