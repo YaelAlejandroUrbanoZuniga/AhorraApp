@@ -1,9 +1,14 @@
 import React from "react";
+// Importante: gesture-handler debe ser la primera línea si usas gestos (aunque no es estricto en Expo moderno, es buena práctica)
+import 'react-native-gesture-handler'; 
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
+// --- Importación de Pantallas ---
+// Asegúrate de que las rutas coincidan exactamente con tu estructura de carpetas
 import InicioSesionScreen from "./Screens/InicioSesionScreen";
 import RegistroScreen from "./Screens/RegistroScreen";
 
@@ -16,43 +21,48 @@ import GraficasScreen from "./Screens/GraficasScreen";
 
 import NotificacionesScreen from "./Screens/NotificacionesScreen";
 
+// Creamos los navegadores
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// --- CONFIGURACIÓN DEL MENÚ DE PESTAÑAS (TABS) ---
+// Este componente contiene las pantallas principales de la app una vez logueado
 function MenuPrincipalTabs() {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => (
-        {
-          headerShown: false,
-          tabBarActiveTintColor: "#0e620dff",
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle: { height: 60, paddingBottom: 8 },
+      screenOptions={({ route }) => ({
+        headerShown: false, // Ocultamos el encabezado por defecto de los tabs
+        tabBarActiveTintColor: "#0e620dff", // Color verde activo
+        tabBarInactiveTintColor: "gray",    // Color gris inactivo
+        tabBarStyle: { height: 60, paddingBottom: 8 },
 
-          tabBarIcon: ({ color, size }) => {
-            let iconName;
+        // Lógica para los íconos dinámicos según la ruta
+        tabBarIcon: ({ color, size, focused }) => {
+          let iconName;
 
-            switch (route.name) {
-              case "Principal":
-                iconName = "home";
-                break;
-              case "Transacciones":
-                iconName = "swap-horizontal";
-                break;
-              case "Presupuestos":
-                iconName = "wallet";
-                break;
-              case "Graficas":
-                iconName = "pie-chart";
-                break;
-              case "Ajustes":
-                iconName = "settings";
-                break;
-            }
+          switch (route.name) {
+            case "Principal":
+              iconName = focused ? "home" : "home-outline";
+              break;
+            case "Transacciones":
+              iconName = focused ? "swap-horizontal" : "swap-horizontal-outline";
+              break;
+            case "Presupuestos":
+              iconName = focused ? "wallet" : "wallet-outline";
+              break;
+            case "Graficas":
+              iconName = focused ? "pie-chart" : "pie-chart-outline";
+              break;
+            case "Ajustes":
+              iconName = focused ? "settings" : "settings-outline";
+              break;
+            default:
+              iconName = "alert-circle-outline";
+          }
 
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-        })}
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
     >
       <Tab.Screen name="Principal" component={PrincipalScreen} />
       <Tab.Screen name="Transacciones" component={TransaccionesScreen} />
@@ -63,13 +73,24 @@ function MenuPrincipalTabs() {
   );
 }
 
+// --- CONFIGURACIÓN PRINCIPAL DE LA NAVEGACIÓN (STACK) ---
+// Este es el "padre" de toda la navegación. Decide qué mostrar primero.
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator 
+        initialRouteName="Login" // <-- IMPORTANTE: La app arranca en el Login
+        screenOptions={{ headerShown: false }} // Ocultamos el encabezado del stack
+      >
+        {/* Pantallas de Autenticación */}
         <Stack.Screen name="Login" component={InicioSesionScreen} />
         <Stack.Screen name="Registro" component={RegistroScreen} />
+
+        {/* Pantalla Principal (que contiene los Tabs) */}
+        {/* Cuando el usuario hace login exitoso, navega a 'MenuPrincipal' */}
         <Stack.Screen name="MenuPrincipal" component={MenuPrincipalTabs} />
+        
+        {/* Pantallas adicionales fuera de los tabs */}
         <Stack.Screen name="Notificaciones" component={NotificacionesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
