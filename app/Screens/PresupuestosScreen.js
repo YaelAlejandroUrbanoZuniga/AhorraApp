@@ -72,6 +72,8 @@ export default function PresupuestosScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.areaSegura}>
 
+      {/* HEADER — igual que Ajustes/Transacciones */} 
+
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.avatarCircle}>

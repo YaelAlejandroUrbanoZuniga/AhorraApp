@@ -65,7 +65,7 @@ export default function PrincipalScreen({ navigation })
 
           <TouchableOpacity style={styles.actionCard} activeOpacity={0.8} onPress={() => navigation.navigate("Graficas")}>
             <View style={styles.actionIconWrap}>
-              <FontAwesome name="pie-chart" size={20} color="#0e620dff" />
+              <Ionicons name="pie-chart" size={20} color="#0e620dff" />
             </View>
             <Text style={styles.actionText}>GRÁFICAS</Text>
           </TouchableOpacity>
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   greetingSmall: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '600',
     textTransform: 'uppercase',
   },
@@ -308,34 +308,5 @@ const styles = StyleSheet.create({
     color: '#B46309',
     fontWeight: '700',
     textTransform: 'uppercase',
-  },
-
-  piePagina: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: FOOTER_HEIGHT,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    backgroundColor: '#fff',
-    paddingHorizontal: 12,
-  },
-  itemPiePagina: {
-    alignItems: 'center',
-  },
-  textoPiePagina: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-    textTransform: 'uppercase',
-    fontWeight: '600',
-  },
-  textoPiePaginaActivo: {
-    color: '#0e620dff',
-    fontWeight: '800',
   },
 });

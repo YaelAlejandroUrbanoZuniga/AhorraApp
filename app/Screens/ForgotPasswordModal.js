@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View,Text,StyleSheet,TextInput, Button} from 'react-native';
-import Modal from 'react-native-modal';
+import { View,Text,StyleSheet,TextInput, Button, Modal} from 'react-native';
 
-export default function OlvidarContraseña({ isVisible, onClose }) {
+
+export default function OlvidarContraseña({ visible, onClose }) {
   const [email, setEmail] = useState('');
   const [isCodeSent, setIsCodeSent] = useState(false);
 
@@ -22,12 +22,12 @@ export default function OlvidarContraseña({ isVisible, onClose }) {
 
   return (
     <Modal
-      isVisible={isVisible}
-      onBackdropPress={handleClose}
-      style={styles.modal}
-      backdropColor="black"
-      backdropOpacity={0.5}
+      visible={visible}
+      onRequestClose={onClose}
+      animationType="fade"
+      transparent={true}
     >
+      <View style={styles.centeredView}>
       <View style={styles.sheet}>
         
         <Text style={styles.title}>Recuperar Contraseña</Text>
@@ -82,6 +82,7 @@ export default function OlvidarContraseña({ isVisible, onClose }) {
         )}
 
       </View>
+      </View>
     </Modal>
   );
 }
@@ -91,11 +92,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     margin: 20,
   },
+  centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
   sheet: {
     backgroundColor: 'white',
     padding: 30,
     borderRadius: 20,
     alignItems: 'center',
+    width: '85%',
   },
   title: {
     fontSize: 24,
