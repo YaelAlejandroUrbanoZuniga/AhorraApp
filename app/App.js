@@ -1,14 +1,18 @@
-import React from "react";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect } from "react";
+import { initDB } from "./services/PresupuestoService";
+
 
 import InicioSesionScreen from "./Screens/InicioSesionScreen";
 import RegistroScreen from "./Screens/RegistroScreen";
 
 import PrincipalScreen from "./Screens/PrincipalScreen";
 import TransaccionesScreen from "./Screens/TransaccionesScreen";
+import NuevaTransaccionScreen from "./Screens/NuevaTransaccionScreen";
 import AjustesScreen from "./Screens/AjustesScreen";
 
 import PresupuestosScreen from "./Screens/PresupuestosScreen";
@@ -20,6 +24,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MenuPrincipalTabs() {
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => (
@@ -64,6 +69,12 @@ function MenuPrincipalTabs() {
 }
 
 export default function App() {
+
+  useEffect(() => {
+  initDB();
+  console.log("Base de datos inicializada");
+}, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -71,6 +82,7 @@ export default function App() {
         <Stack.Screen name="Registro" component={RegistroScreen} />
         <Stack.Screen name="MenuPrincipal" component={MenuPrincipalTabs} />
         <Stack.Screen name="Notificaciones" component={NotificacionesScreen} />
+        <Stack.Screen name="NuevaTransaccion" component={NuevaTransaccionScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
