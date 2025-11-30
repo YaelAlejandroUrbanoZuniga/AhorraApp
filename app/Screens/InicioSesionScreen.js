@@ -1,29 +1,83 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Alert, SafeAreaView, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Alert, SafeAreaView, Image, ActivityIndicator } from 'react-native';
 import OlvidarContraseña from './ForgotPasswordModal';
+import { UsuarioController } from '../controllers/UsuarioController';
 
+const controller = new UsuarioController();
+// Asegúrate de que la ruta sea correcta
 const logoImage = require('../assets/ahorramasapp.png'); 
 
 export default function InicioSesionScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
     const [isModalVisible, setModalVisible] = useState(false);
+    const [loading, setLoading] = useState(false); // Estado para mostrar carga
 
-    const handleLogin = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Inicializar la BD al cargar la pantalla
+    useEffect(() => {
+        const initDB = async () => {
+            try {
+                await controller.initialize();
+                console.log("Base de datos inicializada en Login");
+            } catch (error) {
+                console.error("Error al inicializar BD:", error);
+            }
+        };
+        initDB();
+    }, []);
 
+    const handleLogin = async () => {
+        console.log("Intento de login con:", email);
+
+        // 1. Validaciones básicas de campos vacíos
         if (email.trim() === '') {
             Alert.alert('Error', 'Por favor ingresa tu correo.');
             return;
-        } else if (!emailRegex.test(email)) {
-            Alert.alert('Error', 'Por favor ingresa un correo válido.');
-            return;
-        } else if (password.trim() === '') {
+        } 
+        if (password.trim() === '') {
             Alert.alert('Error', 'Por favor ingresa tu contraseña.');
             return;
-        } else {
-            navigation.navigate("MenuPrincipal");
+        }
+
+        setLoading(true); // Activar indicador de carga
+        try {
+            // 2. Llamada al Controlador para verificar en SQLite
+            // Nota: Asegúrate de que controller.login esté retornando el objeto usuario si es exitoso
+            const usuario = await controller.login(email, password);
+            
+            console.log("Login exitoso, usuario:", usuario);
+
+            if (usuario) {
+                // Si llegamos aquí, el login fue exitoso
+                Alert.alert(
+                    '¡Bienvenido!', 
+                    `Hola de nuevo, ${usuario.nombre}`,
+                    [
+                        {
+                            text: "OK",
+                            onPress: () => {
+                                console.log("Navegando a MenuPrincipal...");
+                                // Asegúrate de que 'MenuPrincipal' esté registrado en tu App.js
+                                navigation.navigate("MenuPrincipal");
+                                
+                                // Limpiar campos
+                                setEmail('');
+                                setPassword('');
+                            }
+                        }
+                    ]
+                );
+            } else {
+                // Este caso no debería alcanzarse si el controlador lanza error, pero por seguridad
+                Alert.alert('Error', 'Credenciales incorrectas.');
+            }
+
+        } catch (error) {
+            console.error("Error en login:", error);
+            // Si el controlador lanza un error (credenciales incorrectas), lo mostramos
+            Alert.alert('Error de Acceso', error.message);
+        } finally {
+            setLoading(false); // Desactivar indicador de carga
         }
     };
 
@@ -69,8 +123,16 @@ export default function InicioSesionScreen({ navigation }) {
                         </Text>
                     </Pressable>
 
-                    <Pressable style={styles.button} onPress={handleLogin}>
-                        <Text style={styles.buttonText}>ACCEDER</Text>
+                    <Pressable 
+                        style={[styles.button, loading && styles.buttonDisabled]} 
+                        onPress={handleLogin}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <ActivityIndicator color="#FFF" />
+                        ) : (
+                            <Text style={styles.buttonText}>ACCEDER</Text>
+                        )}
                     </Pressable>
                 </View>
 
@@ -83,7 +145,7 @@ export default function InicioSesionScreen({ navigation }) {
                 </View>
 
                 <OlvidarContraseña 
-                    visible={isModalVisible} 
+                    isVisible={isModalVisible} 
                     onClose={() => setModalVisible(false)} 
                 />
 
@@ -156,6 +218,9 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         marginTop: 5,
+    },
+    buttonDisabled: {
+        backgroundColor: '#a5d6a7', // Un verde más claro para indicar que está cargando
     },
     buttonText: {
         color: '#FFFFFF',

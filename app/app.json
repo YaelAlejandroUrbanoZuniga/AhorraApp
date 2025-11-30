@@ -4,7 +4,7 @@
     "slug": "AhorraApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./ahorramasapp.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
