@@ -1,4 +1,3 @@
-
 // Importante: gesture-handler debe ser la primera línea si usas gestos (aunque no es estricto en Expo moderno, es buena práctica)
 import React, { useEffect } from 'react';
 import 'react-native-gesture-handler'; 

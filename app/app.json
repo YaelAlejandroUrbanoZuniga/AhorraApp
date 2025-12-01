@@ -4,31 +4,27 @@
     "slug": "AhorraApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./ahorramasapp.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
-
+    "plugins": [
+      "expo-font"
+    ],
     "ios": {
       "supportsTablet": true
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
-
     "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-sqlite"
-    ]
+      "bundler": "metro"
+    }
   }
 }
