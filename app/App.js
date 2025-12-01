@@ -1,5 +1,3 @@
-
-import React from "react";
 // Importante: gesture-handler debe ser la primera línea si usas gestos (aunque no es estricto en Expo moderno, es buena práctica)
 import 'react-native-gesture-handler'; 
 import { NavigationContainer } from "@react-navigation/native";
@@ -82,9 +80,8 @@ function MenuPrincipalTabs() {
 // Este es el "padre" de toda la navegación. Decide qué mostrar primero.
 export default function App() {
 
-  useEffect(() => {
+useEffect(() => {
   initDB();
-  console.log("Base de datos inicializada");
 }, []);
 
   return (
