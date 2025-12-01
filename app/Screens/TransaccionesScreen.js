@@ -291,7 +291,25 @@ const styles = StyleSheet.create({
   cardContent: { flexDirection: 'row', alignItems: 'center', marginTop: 5 },
   category: { fontWeight: 'bold' },
   description: { color: '#666' },
-  amount: { fontWeight: 'bold', fontSize: 16 },
+  date: { 
+    fontSize: 12,
+    color: '#666' 
+  },
+  cardContent: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginTop: 5 },
+  category: { 
+    fontWeight: 'bold' 
+  },
+  description: { 
+    color: '#666' 
+  },
+  amount: { 
+    fontWeight: 'bold', 
+    fontSize: 16 
+  },
+
   buttonsRow: {
     flexDirection: 'row',
     justifyContent: 'center',

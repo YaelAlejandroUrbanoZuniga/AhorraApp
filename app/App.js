@@ -1,5 +1,4 @@
 
-import React from "react";
 // Importante: gesture-handler debe ser la primera línea si usas gestos (aunque no es estricto en Expo moderno, es buena práctica)
 import 'react-native-gesture-handler'; 
 import { NavigationContainer } from "@react-navigation/native";
