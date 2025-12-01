@@ -2,10 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, KeyboardAvoidingView, Platform, Alert, SafeAreaView, Image, ActivityIndicator } from 'react-native';
 import OlvidarContraseña from './ForgotPasswordModal';
 import { UsuarioController } from '../controllers/UsuarioController';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const controller = new UsuarioController();
-// Asegúrate de que la ruta sea correcta
-const logoImage = require('../assets/ahorramasapp.png'); 
+const logoImage = require('../assets/ahorramasapp.png');
+const handleLogin = async () => {
+    // ... validaciones ...
+    try {
+        const usuario = await controller.login(email, password);
+        
+        if (usuario) {
+            // ¡NUEVO! Guardamos el usuario en la memoria del teléfono
+            await AsyncStorage.setItem('userSession', JSON.stringify(usuario));
+
+            Alert.alert('¡Bienvenido!', `Hola de nuevo, ${usuario.nombre}`, [
+                { 
+                    text: "OK", 
+                    onPress: () => {
+                        navigation.navigate("MenuPrincipal"); 
+                        setEmail(''); setPassword('');
+                    }
+                }
+            ]);
+        }
+    } catch (error) {
+        // ... manejo de errores ...
+    }
+    // ...
+};
 
 export default function InicioSesionScreen({ navigation }) {
     const [email, setEmail] = useState('');

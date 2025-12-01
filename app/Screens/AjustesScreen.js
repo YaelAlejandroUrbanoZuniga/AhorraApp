@@ -1,20 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const FOOTER_HEIGHT = 72;
 
-export default function AjustesScreen() {
-  const user = {
-    name: 'USUARIO',
-    email: 'USUARIO@EXAMPLE.COM',
-    monthlyIncome: 12000,
-  };
+export default function AjustesScreen({ navigation }) {
+  const [user, setUser] = useState({
+    name: 'Cargando...',
+    email: '...',
+    monthlyIncome: 0, 
+  });
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const userSession = await AsyncStorage.getItem('userSession');
+        if (userSession) {
+          const userData = JSON.parse(userSession);
+          setUser({
+            name: userData.nombre, 
+            email: userData.email, 
+            monthlyIncome: 12000,
+          });
+        }
+      } catch (error) {
+        console.error("Error cargando datos del usuario", error);
+      }
+    };
+
+    loadUserData();
+  }, []);
 
   const handleLogout = () => {
-    Alert.alert('CERRAR SESIÓN', '¿SEGURO QUE QUIERES SALIR?', [
+    Alert.alert('CERRAR SESIÓN', '¿Seguro que quieres salir?', [
       { text: 'CANCELAR', style: 'cancel' },
-      { text: 'SÍ, SALIR', onPress: () => console.log('SESION CERRADA') },
+      { 
+        text: 'SÍ, SALIR', 
+        style: 'destructive', // En iOS se ve rojo
+        onPress: async () => {
+          try {
+            // 1. Borramos la sesión del almacenamiento
+            await AsyncStorage.removeItem('userSession');
+            
+            // 2. Navegamos al Login y reiniciamos el historial para que no pueda volver atrás
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
+          } catch (error) {
+            console.error("Error al cerrar sesión", error);
+          }
+        } 
+      },
     ]);
   };
 
@@ -26,7 +64,8 @@ export default function AjustesScreen() {
             <Ionicons name="person" size={18} color="#0e620dff" />
           </View>
           <View style={styles.headerGreeting}>
-            <Text style={styles.greetingSmall}>USUARIO</Text>
+            {/* Mostramos el nombre real del usuario */}
+            <Text style={styles.greetingSmall}>{user.name}</Text>
           </View>
         </View>
       </View>
@@ -112,15 +151,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
 
-  bellButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: '#0b4f10',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
   contenedorPrincipal: {
     paddingHorizontal: 18,
     paddingTop: 18,
@@ -156,7 +186,7 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 13,
     color: '#777',
-    textTransform: 'uppercase',
+    // textTransform: 'uppercase', // Email se ve mejor en minúsculas generalmente
   },
 
   incomeContainer: {
@@ -210,34 +240,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 15,
     textTransform: 'uppercase',
-  },
-
-  piePagina: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: FOOTER_HEIGHT,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    backgroundColor: '#fff',
-    paddingHorizontal: 12,
-  },
-  itemPiePagina: {
-    alignItems: 'center',
-  },
-  textoPiePagina: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-    textTransform: 'uppercase',
-    fontWeight: '600',
-  },
-  textoPiePaginaActivo: {
-    color: '#0e620dff',
-    fontWeight: '800',
   },
 });
