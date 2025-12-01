@@ -1,4 +1,3 @@
-import React from "react";
 // Importante: gesture-handler debe ser la primera línea si usas gestos (aunque no es estricto en Expo moderno, es buena práctica)
 import React, { useEffect } from 'react';
 import 'react-native-gesture-handler'; 
@@ -6,7 +5,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect } from "react";
 import { initDB } from "./services/PresupuestoService";
 
 
