@@ -1,4 +1,3 @@
-// screens/TransaccionesScreen.js
 import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
@@ -8,14 +7,14 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  StyleSheet,
   Alert,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  StyleSheet
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import DatabaseService from '../database/DatabaseService';
+import DatabaseServiceT from '../../databaseT/DatabaseServiceT';
 
 const FOOTER_HEIGHT = 72;
 
@@ -32,11 +31,12 @@ export default function TransaccionesScreen() {
     tipo: 'gasto',
   });
 
+  // Inicializa la base de datos y carga transacciones
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        await DatabaseService.initialize();
-        const datos = await DatabaseService.getAll();
+        await DatabaseServiceT.initialize();
+        const datos = await DatabaseServiceT.getAll();
         setTransacciones(Array.isArray(datos) ? datos : []);
       } catch (error) {
         console.log('Error cargando datos:', error);
@@ -45,6 +45,7 @@ export default function TransaccionesScreen() {
     cargarDatos();
   }, []);
 
+  // Abre modal para nueva o actualización
   const abrirModal = (modoAccion, transaccion = null) => {
     setModo(modoAccion);
     if (modoAccion === 'actualizar' && transaccion) {
@@ -69,18 +70,28 @@ export default function TransaccionesScreen() {
     setModalVisible(true);
   };
 
+  // Guardar transacción
   const guardarTransaccion = async () => {
     try {
+      if (!formData.fecha || !formData.categoria || !formData.descripcion || !formData.monto) {
+        Alert.alert('Campos incompletos', 'Por favor llena todos los campos antes de guardar.');
+        return;
+      }
+
       const nueva = {
         ...formData,
         monto: Number(formData.monto || 0),
       };
+
+      console.log("Guardando transacción:", nueva);
+
       if (modo === 'nuevo') {
-        await DatabaseService.add(nueva);
+        await DatabaseServiceT.add(nueva);
       } else {
-        await DatabaseService.update(nueva);
+        await DatabaseServiceT.update(nueva);
       }
-      const actualizadas = await DatabaseService.getAll();
+
+      const actualizadas = await DatabaseServiceT.getAll();
       setTransacciones(Array.isArray(actualizadas) ? actualizadas : []);
       setModalVisible(false);
     } catch (e) {
@@ -88,6 +99,7 @@ export default function TransaccionesScreen() {
     }
   };
 
+  // Eliminar transacción
   const eliminarTransaccion = () => {
     Alert.alert(
       '¿Eliminar transacción?',
@@ -99,8 +111,8 @@ export default function TransaccionesScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await DatabaseService.remove(formData.id);
-              const actualizadas = await DatabaseService.getAll();
+              await DatabaseServiceT.remove(formData.id);
+              const actualizadas = await DatabaseServiceT.getAll();
               setTransacciones(Array.isArray(actualizadas) ? actualizadas : []);
               setModalVisible(false);
             } catch (e) {
@@ -114,6 +126,7 @@ export default function TransaccionesScreen() {
 
   return (
     <SafeAreaView style={styles.areaSegura}>
+      {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.avatarCircle}>
@@ -125,6 +138,7 @@ export default function TransaccionesScreen() {
         </View>
       </View>
 
+      {/* Lista */}
       <FlatList
         data={transacciones}
         keyExtractor={(item) => item.id}
@@ -152,6 +166,7 @@ export default function TransaccionesScreen() {
         )}
       />
 
+      {/* Botón nueva transacción */}
       <View style={styles.buttonsRow}>
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: '#00b140' }]}
@@ -161,6 +176,7 @@ export default function TransaccionesScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalContainer}>
           <KeyboardAvoidingView
@@ -202,6 +218,7 @@ export default function TransaccionesScreen() {
                   onChangeText={(text) => setFormData({ ...formData, monto: text })}
                 />
 
+                {/* Selector de tipo */}
                 <View style={styles.tipoRow}>
                   <TouchableOpacity
                     style={[
@@ -224,6 +241,7 @@ export default function TransaccionesScreen() {
                   </TouchableOpacity>
                 </View>
 
+                {/* Botones modal */}
                 <View style={styles.modalButtons}>
                   <TouchableOpacity
                     style={[styles.actionButton, { backgroundColor: '#00b140' }]}
@@ -256,8 +274,6 @@ export default function TransaccionesScreen() {
     </SafeAreaView>
   );
 }
-
-
 const styles = StyleSheet.create({
   areaSegura: { flex: 1, backgroundColor: '#f5f5f5' },
   header: {
@@ -370,3 +386,4 @@ scrollContent: {
   justifyContent: 'center',
 },
 });
+DatabaseService
