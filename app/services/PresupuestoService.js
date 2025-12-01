@@ -1,38 +1,37 @@
-import * as SQLite from 'expo-sqlite';
+import SQLite from "expo-sqlite";
 
-const db = SQLite.openDatabase('presupuestos.db');
+let db;
 
+// Inicializar BD
+export const initDB = async () => {
+  db = await SQLite.openDatabaseAsync("presupuestos.db");
 
-// Crear tabla si no existe
-export const initDB = () => {
-  db.transaction(tx => {
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS presupuestos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        categoria TEXT,
-        monto REAL,
-        usado REAL,
-        fecha TEXT
-      );`
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS presupuestos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      categoria TEXT,
+      monto REAL,
+      usado REAL,
+      fecha TEXT
     );
-  });
+  `);
+
+  console.log("BD lista");
 };
 
 // INSERTAR
-export const agregarPresupuestoDB = (categoria, monto, usado, fecha, callback) => {
-  db.transaction(tx => {
-    tx.executeSql(
-      `INSERT INTO presupuestos (categoria, monto, usado, fecha)
-       VALUES (?, ?, ?, ?)`,
-      [categoria, monto, usado, fecha],
-      (_, result) => callback(result.insertId),
-      (_, error) => console.log("Error al insertar:", error)
-    );
-  });
+export const agregarPresupuestoDB = async (categoria, monto, usado, fecha) => {
+  const result = await db.runAsync(
+    `INSERT INTO presupuestos (categoria, monto, usado, fecha)
+     VALUES (?, ?, ?, ?)`,
+    [categoria, monto, usado, fecha]
+  );
+
+  return result.lastInsertRowId;
 };
 
-// OBTENER PRESUPUESTOS (con filtros)
-export const obtenerPresupuestosDB = (filtroCategoria, filtroFecha, callback) => {
+// OBTENER
+export const obtenerPresupuestosDB = async (filtroCategoria, filtroFecha) => {
   let query = "SELECT * FROM presupuestos WHERE 1=1";
   let params = [];
 
@@ -46,38 +45,23 @@ export const obtenerPresupuestosDB = (filtroCategoria, filtroFecha, callback) =>
     params.push(filtroFecha);
   }
 
-  db.transaction(tx => {
-    tx.executeSql(
-      query,
-      params,
-      (_, { rows }) => callback(rows._array),
-      (_, error) => console.log("Error al consultar:", error)
-    );
-  });
+  return await db.getAllAsync(query, params);
 };
 
-// ACTUALIZAR
-export const editarPresupuestoDB = (id, categoria, monto, usado, fecha, callback) => {
-  db.transaction(tx => {
-    tx.executeSql(
-      `UPDATE presupuestos 
-       SET categoria = ?, monto = ?, usado = ?, fecha = ?
-       WHERE id = ?`,
-      [categoria, monto, usado, fecha, id],
-      (_, result) => callback(result),
-      (_, error) => console.log("Error al editar:", error)
-    );
-  });
+// EDITAR
+export const editarPresupuestoDB = async (id, categoria, monto, usado, fecha) => {
+  return await db.runAsync(
+    `UPDATE presupuestos 
+     SET categoria = ?, monto = ?, usado = ?, fecha = ?
+     WHERE id = ?`,
+    [categoria, monto, usado, fecha, id]
+  );
 };
 
 // ELIMINAR
-export const eliminarPresupuestoDB = (id, callback) => {
-  db.transaction(tx => {
-    tx.executeSql(
-      "DELETE FROM presupuestos WHERE id = ?",
-      [id],
-      (_, result) => callback(result),
-      (_, error) => console.log("Error al eliminar:", error)
-    );
-  });
+export const eliminarPresupuestoDB = async (id) => {
+  return await db.runAsync(
+    "DELETE FROM presupuestos WHERE id = ?",
+    [id]
+  );
 };
