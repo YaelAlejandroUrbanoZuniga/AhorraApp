@@ -28,7 +28,7 @@ export default function PrincipalScreen({ navigation })
             <Ionicons name="person" size={18} color="#0e620dff" />
           </View>
           <View style={styles.headerGreeting}>
-            <Text style={styles.greetingSmall}>¡HOLA, USUARIO!</Text>
+            <Text style={styles.greetingSmall}>AHORRA + APP</Text>
           </View>
         </View>
 
