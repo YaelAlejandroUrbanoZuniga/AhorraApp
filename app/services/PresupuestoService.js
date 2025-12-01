@@ -1,11 +1,16 @@
-import SQLite from "expo-sqlite";
+// PresupuestoService.js
+import * as SQLite from "expo-sqlite";
 
-let db;
+// Base de datos
+let db = null;
 
-// Inicializar BD
+// 🔵 Inicializar Base de Datos
 export const initDB = async () => {
-  db = await SQLite.openDatabaseAsync("presupuestos.db");
+  if (!db) {
+    db = await SQLite.openDatabaseAsync("presupuestos.db");
+  }
 
+  // Crear tabla
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS presupuestos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,52 +21,61 @@ export const initDB = async () => {
     );
   `);
 
-  console.log("BD lista");
+  console.log("✅ Base de datos lista");
 };
 
-// INSERTAR
+// 🔵 INSERTAR PRESUPUESTO
 export const agregarPresupuestoDB = async (categoria, monto, usado, fecha) => {
+  if (!db) await initDB();
+
   const result = await db.runAsync(
     `INSERT INTO presupuestos (categoria, monto, usado, fecha)
      VALUES (?, ?, ?, ?)`,
     [categoria, monto, usado, fecha]
   );
 
-  return result.lastInsertRowId;
+  return result.lastInsertRowId; // ID insertado
 };
 
-// OBTENER
+// 🔵 OBTENER PRESUPUESTOS (con filtros opcionales)
 export const obtenerPresupuestosDB = async (filtroCategoria, filtroFecha) => {
+  if (!db) await initDB();
+
   let query = "SELECT * FROM presupuestos WHERE 1=1";
   let params = [];
 
-  if (filtroCategoria) {
-    query += " AND categoria = ?";
-    params.push(filtroCategoria);
+  if (filtroCategoria && filtroCategoria.trim() !== "") {
+    query += " AND categoria LIKE ?";
+    params.push(`%${filtroCategoria}%`);
   }
 
-  if (filtroFecha) {
+  if (filtroFecha && filtroFecha.trim() !== "") {
     query += " AND fecha = ?";
     params.push(filtroFecha);
   }
 
-  return await db.getAllAsync(query, params);
+  const rows = await db.getAllAsync(query, params);
+  return rows;
 };
 
-// EDITAR
+// 🔵 EDITAR PRESUPUESTO
 export const editarPresupuestoDB = async (id, categoria, monto, usado, fecha) => {
+  if (!db) await initDB();
+
   return await db.runAsync(
     `UPDATE presupuestos 
-     SET categoria = ?, monto = ?, usado = ?, fecha = ?
-     WHERE id = ?`,
+       SET categoria=?, monto=?, usado=?, fecha=?
+     WHERE id=?`,
     [categoria, monto, usado, fecha, id]
   );
 };
 
-// ELIMINAR
+// 🔵 ELIMINAR PRESUPUESTO
 export const eliminarPresupuestoDB = async (id) => {
+  if (!db) await initDB();
+
   return await db.runAsync(
-    "DELETE FROM presupuestos WHERE id = ?",
+    `DELETE FROM presupuestos WHERE id = ?`,
     [id]
   );
 };
