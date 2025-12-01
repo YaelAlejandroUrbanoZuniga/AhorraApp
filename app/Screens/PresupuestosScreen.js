@@ -1,72 +1,157 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {SafeAreaView, View, Text, TouchableOpacity, FlatList, Modal, TextInput, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { agregarPresupuestoDB, obtenerPresupuestosDB, editarPresupuestoDB, eliminarPresupuestoDB } from '../services/PresupuestoService';
 
 const FOOTER_HEIGHT = 72;
 
 export default function PresupuestosScreen({ navigation }) {
 
-  const [presupuestos, setPresupuestos] = useState([
-    { id: '1', categoria: 'Comida', monto: 1500, usado: 600 },
-    { id: '2', categoria: 'Transporte', monto: 800, usado: 250 },
-    { id: '3', categoria: 'Entretenimiento', monto: 500, usado: 100 },
-  ]);
-
+  const [presupuestos, setPresupuestos] = useState([]);
   const [modalAgregar, setModalAgregar] = useState(false);
   const [modalModificar, setModalModificar] = useState(false);
-
   const [categoria, setCategoria] = useState('');
   const [monto, setMonto] = useState('');
   const [usado, setUsado] = useState('');
-
   const [presupuestoEditando, setPresupuestoEditando] = useState(null);
+  const [filtroCategoria, setFiltroCategoria] = useState('');
+  const [filtroFecha, setFiltroFecha] = useState('');
+  
+  useEffect(() => {
+    cargarPresupuestos(); // MODIFICADO: carga inicial desde BD
+  }, []);
 
-  const agregarPresupuesto = () => {
-    if (!categoria || !monto) return;
-
-    const nuevo = {
-      id: Date.now().toString(),
-      categoria,
-      monto: parseFloat(monto),
-      usado: parseFloat(usado || 0)
-    };
-
-    setPresupuestos([...presupuestos, nuevo]);
-    setModalAgregar(false);
-    setCategoria('');
-    setMonto('');
-    setUsado('');
+  const cargarPresupuestos = (categoriaFiltro = filtroCategoria, fechaFiltro = filtroFecha) => {
+    obtenerPresupuestosDB(
+      categoriaFiltro ? categoriaFiltro.trim() : '',
+      fechaFiltro ? fechaFiltro.trim() : '',
+      (rows) => {
+        // rows es un array de objetos { id, categoria, monto, usado, fecha }
+        setPresupuestos(rows);
+      }
+    );
   };
 
-  const abrirModificar = (item) => {
+  const agregarPresupuesto = () => {
+    if (!categoria || !monto) {
+      Alert.alert('Falta información', 'La categoría y el monto son obligatorios.');
+      return;
+    }
+    const montoNum = parseFloat(monto);
+    const usadoNum = parseFloat(usado || '0');
+
+    if (isNaN(montoNum) || montoNum <= 0) {
+      Alert.alert('Monto inválido', 'Ingresa un monto válido mayor que 0.');
+      return;
+    }
+
+    const fechaAuto = new Date().toISOString().slice(0, 10);
+    agregarPresupuestoDB(categoria.trim(), montoNum, usadoNum, fechaAuto, (insertId) => {
+      cargarPresupuestos();
+      setModalAgregar(false);
+      setCategoria('');
+      setMonto('');
+      setUsado('');
+    });
+  };
+
+
+    const abrirModificar = (item) => {
     setPresupuestoEditando(item);
     setCategoria(item.categoria);
     setMonto(item.monto.toString());
-    setUsado(item.usado.toString());
+    setUsado(item.usado != null ? item.usado.toString() : '0');
     setModalModificar(true);
   };
 
   const modificarPresupuesto = () => {
     if (!presupuestoEditando) return;
 
-    const actualizado = {
-      ...presupuestoEditando,
-      categoria,
-      monto: parseFloat(monto),
-      usado: parseFloat(usado || 0),
-    };
+    if (!categoria.trim() || !monto) {
+      Alert.alert('Falta información', 'La categoría y el monto son obligatorios.');
+      return;
+    }
 
-    setPresupuestos(
-      presupuestos.map((p) =>
-        p.id === presupuestoEditando.id ? actualizado : p
-      )
+    const montoNum = parseFloat(monto);
+    const usadoNum = parseFloat(usado || '0');
+
+    if (isNaN(montoNum) || montoNum <= 0) {
+      Alert.alert('Monto inválido', 'Ingresa un monto válido mayor que 0.');
+      return;
+    }
+
+    editarPresupuestoDB(
+      presupuestoEditando.id,
+      categoria.trim(),
+      montoNum,
+      usadoNum,
+      presupuestoEditando.fecha,
+      (result) => {
+        // recargar lista y limpiar
+        cargarPresupuestos();
+        setModalModificar(false);
+        setPresupuestoEditando(null);
+        setCategoria('');
+        setMonto('');
+        setUsado('');
+      }
     );
+  };
 
-    setModalModificar(false);
-    setPresupuestoEditando(null);
-    setCategoria('');
-    setMonto('');
-    setUsado('');
+  const confirmarEliminar = (id) => {
+    Alert.alert('Eliminar presupuesto', '¿Seguro que deseas eliminar este presupuesto?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar',
+        style: 'destructive',
+        onPress: () => {
+          eliminarPresupuestoDB(id, (res) => {
+            cargarPresupuestos();
+          });
+        },
+      },
+    ]);
+  };
+
+  const aplicarFiltros = () => {
+    cargarPresupuestos(filtroCategoria, filtroFecha);
+  };
+
+  const limpiarFiltros = () => {
+    setFiltroCategoria('');
+    setFiltroFecha('');
+    cargarPresupuestos('', '');
+  };
+
+  const renderItem = ({ item }) => {
+    // proteger contra división por cero y datos inválidos
+    const montoNum = parseFloat(item.monto) || 0;
+    const usadoNum = parseFloat(item.usado) || 0;
+    const porcentaje = montoNum > 0 ? (usadoNum / montoNum) * 100 : 0;
+    const restante = montoNum - usadoNum;
+
+    return (
+      <TouchableOpacity onPress={() => abrirModificar(item)}>
+        <View style={styles.budgetCard}>
+          <Text style={styles.category}>{item.categoria}</Text>
+
+          <View style={styles.cardRow}>
+            <Text style={styles.amount}>Presupuesto: ${montoNum.toFixed(2)}</Text>
+            <Text style={styles.used}>Usado: ${usadoNum.toFixed(2)}</Text>
+          </View>
+
+          <View style={styles.cardRow}>
+            <Text style={styles.remaining}>Restante: ${restante.toFixed(2)}</Text>
+            <Text style={styles.percentage}>{porcentaje.toFixed(0)}%</Text>
+          </View>
+
+          {/* Mostrar fecha (MODIFICADO: mostramos la fecha guardada automáticamente) */}
+          <View style={{ marginTop: 8 }}>
+            <Text style={{ fontSize: 12, color: '#666' }}>Fecha: {item.fecha}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -86,43 +171,63 @@ export default function PresupuestosScreen({ navigation }) {
         </View>
       </View>
 
+      <View style={styles.filterRow}>
+        <TextInput
+          placeholder="Filtrar por categoría"
+          style={[styles.input, { flex: 1, marginRight: 8 }]}
+          value={filtroCategoria}
+          onChangeText={setFiltroCategoria}
+        />
+        <TextInput
+          placeholder="Filtrar por fecha (YYYY-MM-DD)"
+          style={[styles.input, { width: 150 }]}
+          value={filtroFecha}
+          onChangeText={setFiltroFecha}
+        />
+      </View>
+
+      <View style={{ flexDirection: 'row', 
+                     paddingHorizontal: 20, 
+                     marginBottom: 8 }}>
+        <TouchableOpacity style={styles.filtrarBtn} onPress={aplicarFiltros}>
+          <Text style={{ color: '#fff', fontWeight: '700' }}>APLICAR</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.filtrarBtn, { 
+                                  backgroundColor: '#ccc',
+                                  marginLeft: 8 }]} 
+                                  onPress={limpiarFiltros}>
+          <Text style={{ color: '#333', fontWeight: '700' }}>LIMPIAR</Text>
+        </TouchableOpacity>
+      </View>
+
+
       <FlatList
         data={presupuestos}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingBottom: FOOTER_HEIGHT + 120, paddingHorizontal: 20 }}
-        renderItem={({ item }) => {
-          const porcentaje = (item.usado / item.monto) * 100;
-          const restante = item.monto - item.usado;
-
-          return (
-            <TouchableOpacity onPress={() => abrirModificar(item)}>
-              <View style={styles.budgetCard}>
-                <Text style={styles.category}>{item.categoria}</Text>
-
-                <View style={styles.cardRow}>
-                  <Text style={styles.amount}>Presupuesto: ${item.monto.toFixed(2)}</Text>
-                  <Text style={styles.used}>Usado: ${item.usado.toFixed(2)}</Text>
-                </View>
-
-                <View style={styles.cardRow}>
-                  <Text style={styles.remaining}>Restante: ${restante.toFixed(2)}</Text>
-                  <Text style={styles.percentage}>{porcentaje.toFixed(0)}%</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
+        renderItem={renderItem}
+        ListEmptyComponent={
+          <View style={{ padding: 20 }}>
+            <Text style={{ textAlign: 'center', color: '#666' }}>No hay presupuestos.</Text>
+          </View>
+        }
       />
 
       <View style={styles.buttonsRow}>
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: '#00b140' }]}
-          onPress={() => setModalAgregar(true)}
+          onPress={() => {
+            // Abrir modal de agregar (limpiar campos primero)
+            setCategoria('');
+            setMonto('');
+            setUsado('');
+            setModalAgregar(true);
+          }}
         >
           <Text style={styles.buttonText}>AGREGAR PRESUPUESTO</Text>
         </TouchableOpacity>
       </View>
-
       <Modal visible={modalAgregar} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalBox}>
@@ -144,12 +249,17 @@ export default function PresupuestosScreen({ navigation }) {
             />
 
             <TextInput
-              placeholder="Usado"
+              placeholder="Usado (opcional)"
               style={styles.input}
               keyboardType="numeric"
               value={usado}
               onChangeText={setUsado}
             />
+            <View style={{ alignItems: 'center', marginBottom: 8 }}>
+              <Text style={{ color: '#666' }}>
+                Fecha (se asigna automáticamente): {new Date().toISOString().slice(0, 10)}
+              </Text>
+            </View>
 
             <TouchableOpacity style={styles.saveBtn} onPress={agregarPresupuesto}>
               <Text style={styles.saveText}>Guardar</Text>
@@ -160,9 +270,9 @@ export default function PresupuestosScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+       </Modal>
 
-      <Modal visible={modalModificar} transparent animationType="fade">
+       <Modal visible={modalModificar} transparent animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalBox}>
             <Text style={styles.modalTitle}>Modificar Presupuesto</Text>
@@ -190,8 +300,25 @@ export default function PresupuestosScreen({ navigation }) {
               onChangeText={setUsado}
             />
 
+
+          <View style={{ alignItems: 'center', marginBottom: 8 }}>
+              <Text style={{ color: '#666' }}>
+                Fecha: {presupuestoEditando ? presupuestoEditando.fecha : ''}
+              </Text>
+            </View>
+
             <TouchableOpacity style={styles.saveBtn} onPress={modificarPresupuesto}>
               <Text style={styles.saveText}>Actualizar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.cancelBtn, { backgroundColor: '#ffecec', marginTop: 8 }]}
+              onPress={() => {
+                // botón eliminar (confirmación adicional)
+                if (presupuestoEditando) confirmarEliminar(presupuestoEditando.id);
+              }}
+            >
+              <Text style={[styles.cancelText, { color: '#a00' }]}>Eliminar</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.cancelBtn} onPress={() => setModalModificar(false)}>
@@ -200,10 +327,10 @@ export default function PresupuestosScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   areaSegura: {
@@ -342,5 +469,19 @@ const styles = StyleSheet.create({
   cancelText: {
     color: '#444',
     fontWeight: 'bold',
+  },
+  filterRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    marginTop: 12,
+    marginBottom: 8,
+    alignItems: 'center',
+  },
+  filtrarBtn: {
+    backgroundColor: '#0e620dff',
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    alignItems: 'center',
   },
 });

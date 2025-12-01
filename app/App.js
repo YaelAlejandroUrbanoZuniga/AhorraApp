@@ -1,11 +1,14 @@
+
 import React from "react";
 // Importante: gesture-handler debe ser la primera línea si usas gestos (aunque no es estricto en Expo moderno, es buena práctica)
 import 'react-native-gesture-handler'; 
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect } from "react";
+import { initDB } from "./services/PresupuestoService";
+
 
 // --- Importación de Pantallas ---
 // Asegúrate de que las rutas coincidan exactamente con tu estructura de carpetas
@@ -14,6 +17,7 @@ import RegistroScreen from "./Screens/RegistroScreen";
 
 import PrincipalScreen from "./Screens/PrincipalScreen";
 import TransaccionesScreen from "./Screens/TransaccionesScreen";
+import NuevaTransaccionScreen from "./Screens/NuevaTransaccionScreen";
 import AjustesScreen from "./Screens/AjustesScreen";
 
 import PresupuestosScreen from "./Screens/PresupuestosScreen";
@@ -28,6 +32,7 @@ const Tab = createBottomTabNavigator();
 // --- CONFIGURACIÓN DEL MENÚ DE PESTAÑAS (TABS) ---
 // Este componente contiene las pantallas principales de la app una vez logueado
 function MenuPrincipalTabs() {
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -76,6 +81,12 @@ function MenuPrincipalTabs() {
 // --- CONFIGURACIÓN PRINCIPAL DE LA NAVEGACIÓN (STACK) ---
 // Este es el "padre" de toda la navegación. Decide qué mostrar primero.
 export default function App() {
+
+  useEffect(() => {
+  initDB();
+  console.log("Base de datos inicializada");
+}, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator 
@@ -92,6 +103,7 @@ export default function App() {
         
         {/* Pantallas adicionales fuera de los tabs */}
         <Stack.Screen name="Notificaciones" component={NotificacionesScreen} />
+        <Stack.Screen name="NuevaTransaccion" component={NuevaTransaccionScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
